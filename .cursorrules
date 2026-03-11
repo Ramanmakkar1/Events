@@ -1,0 +1,32 @@
+# Project Overview
+
+This is a Next.js (App Router) project built for discovering events. It currently supports Edmonton and Toronto weekends, pulling data live from the Ticketmaster API.
+
+## Core Architecture
+- **Framework**: Next.js 16.1.6 (App Router)
+- **Language**: JavaScript
+- **Styling**: Vanilla CSS (`app/globals.css`)
+- **API**: Ticketmaster API (fetched real-time from the client)
+- **Deployment**: Vercel
+
+## Styling Rules
+1. **NO Tailwind CSS**. The project relies entirely on pure vanilla CSS in `app/globals.css`.
+2. Do NOT add new utility class frameworks. If you need a new class, write it in `app/globals.css`.
+3. The design is heavily inspired by glassmorphism, using gradients, blur, fades, and dark themes. Maintain this aesthetic strictly.
+
+## Pages
+1. `app/page.js`: The Edmonton Weekend page.
+2. `app/toronto/page.js`: The Toronto Weekend page.
+
+## Components & Logic
+- The page component handles all state (`useState`, `useEffect`, `useMemo`).
+- It has two main views: `home` (landing page, showcase events) and `events` (calendar/list views).
+- Use `generateDemoEvents()` as a fallback when the Ticketmaster API is rate-limited or unavailable.
+
+## Multi-City Theming
+When creating or modifying a city, wrap the whole page component in a theme class (e.g. `<div className="theme-toronto">`) which overwrites CSS variables defined in `:root`.
+- `var(--oilers-blue)` and `var(--oilers-orange)` are historical variables that dictate the main dark backgrounds and bright accents respectively.
+
+## Updating the project
+- When running `npm run build`, Next.js will export.
+- Always check that responsive design in globals.css isn't broken when creating new elements.
