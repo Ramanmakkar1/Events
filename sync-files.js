@@ -107,6 +107,13 @@ function processContent(str, cityConfig) {
     str = str.replace(/Built for Edmonton locals/g, "Built for " + cityConfig.name + " locals");
     str = str.replace(/@edmontonweekend/g, "@" + cityConfig.name.toLowerCase() + "weekend");
 
+    // Shop Memorabilia text
+    str = str.replace(/Exclusive Oilers Memorabilia/g, "Exclusive " + cityConfig.teamName + " Memorabilia");
+    str = str.replace(/Oilers Autographed Home Jersey/g, cityConfig.teamName + " Autographed Home Jersey");
+    str = str.replace(/Oilers Signed Game Stick/g, cityConfig.teamName + " Signed Game Stick");
+    str = str.replace(/Official Oilers Game Puck/g, "Official " + cityConfig.teamName + " Game Puck");
+    str = str.replace(/Oilers Limited Edition Framed/g, cityConfig.teamName + " Limited Edition Framed");
+
     let prov = 'Ontario';
     if (cityConfig.name === 'Montreal') prov = 'Quebec';
     if (cityConfig.name === 'Vancouver') prov = 'British Columbia';

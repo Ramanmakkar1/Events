@@ -541,7 +541,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <a href="#" className="nav-btn">Shop</a>
+              <button
+                className={`nav-btn ${activePage === "shop" ? "active" : ""}`}
+                onClick={() => setActivePage("shop")}
+              >
+                Shop
+              </button>
               <a href="#" className="nav-btn">About</a>
 
               <button
@@ -908,6 +913,44 @@ export default function Home() {
 
                 </>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* SHOP PAGE */}
+        {activePage === "shop" && (
+          <div id="shop-page" style={{ padding: "64px 24px" }} className="fade-in">
+            <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+              <div className="section-header">
+                <div className="section-bar" style={{ background: "var(--accent)" }}></div>
+                <h2 className="section-title">Exclusive Oilers Memorabilia</h2>
+              </div>
+              <p style={{ color: "var(--text2)", marginBottom: "32px", maxWidth: "600px", fontSize: "16px", lineHeight: "1.6" }}>
+                Authentic, game-worn and signed gear. Due to extremely high demand during playoff season, all items are currently out of stock. Check back later for restocks!
+              </p>
+              
+              <div className="events-grid">
+                {[
+                  { name: "Oilers Autographed Home Jersey", price: 1250, img: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=600&h=400&fit=crop" },
+                  { name: "Oilers Signed Game Stick", price: 850, img: "https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?w=600&h=400&fit=crop" },
+                  { name: "Official Oilers Game Puck (Signed)", price: 299, img: "https://images.unsplash.com/photo-1549646320-c255d49133bd?w=600&h=400&fit=crop" },
+                  { name: "Oilers Limited Edition Framed Photo", price: 450, img: "https://images.unsplash.com/photo-1505367332454-e4c19ea5518b?w=600&h=400&fit=crop" },
+                ].map((item, i) => (
+                  <div key={i} className="event-card fade-up group" style={{ animationDelay: `${i * 0.1}s`, background: `linear-gradient(135deg, rgba(var(--oilers-blue-rgb), 0.6), rgba(0,0,0,0.8))` }}>
+                    <div className="event-card-img" style={{ backgroundImage: `url('${item.img}')`, filter: "grayscale(30%)", opacity: 0.8 }}>
+                        <div style={{ position: "absolute", top: "12px", right: "12px", background: "rgba(255, 50, 50, 0.9)", color: "#fff", padding: "4px 10px", borderRadius: "6px", fontSize: "11px", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>Out of Stock</div>
+                    </div>
+                    <div className="event-card-body">
+                      <div className="event-card-cat-inline">
+                        <span style={{ fontSize: "14px" }}>💎</span>
+                        <span className="event-card-cat-label" style={{ color: "var(--accent)" }}>Authentic Signed</span>
+                      </div>
+                      <h4>{item.name}</h4>
+                      <div className="event-card-price" style={{ background: "rgba(var(--accent-rgb), 0.15)", color: "var(--accent)" }}>${item.price} CAD</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
