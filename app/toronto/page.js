@@ -553,7 +553,9 @@ export default function Home() {
                   <span>TORONTO • ONTARIO • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Toronto
+                  Everything Happening
+                  <br />
+                  in Toronto
                 </h1>
                 <p>
                   Live concerts, Maple Leafs games, festivals, comedy nights — your one-stop

@@ -553,7 +553,9 @@ export default function Home() {
                   <span>WINNIPEG • MANITOBA • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Winnipeg
+                  Everything Happening
+                  <br />
+                  in Winnipeg
                 </h1>
                 <p>
                   Live concerts, Jets games, festivals, comedy nights — your one-stop

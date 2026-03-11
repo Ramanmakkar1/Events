@@ -578,7 +578,9 @@ export default function Home() {
                   <span>EDMONTON • ALBERTA • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Edmonton
+                  Everything Happening
+                  <br />
+                  in Edmonton
                 </h1>
                 <p>
                   Live concerts, Oilers games, festivals, comedy nights — your one-stop

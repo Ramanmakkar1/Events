@@ -553,7 +553,9 @@ export default function Home() {
                   <span>CALGARY • ALBERTA • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Calgary
+                  Everything Happening
+                  <br />
+                  in Calgary
                 </h1>
                 <p>
                   Live concerts, Flames games, festivals, comedy nights — your one-stop

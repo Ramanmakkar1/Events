@@ -553,7 +553,9 @@ export default function Home() {
                   <span>MONTREAL • QUEBEC • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Montreal
+                  Everything Happening
+                  <br />
+                  in Montreal
                 </h1>
                 <p>
                   Live concerts, Canadiens games, festivals, comedy nights — your one-stop

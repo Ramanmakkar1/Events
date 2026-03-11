@@ -553,7 +553,9 @@ export default function Home() {
                   <span>VANCOUVER • BRITISH COLUMBIA • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Vancouver
+                  Everything Happening
+                  <br />
+                  in Vancouver
                 </h1>
                 <p>
                   Live concerts, Canucks games, festivals, comedy nights — your one-stop

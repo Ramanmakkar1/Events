@@ -553,7 +553,9 @@ export default function Home() {
                   <span>OTTAWA • ONTARIO • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Ottawa
+                  Everything Happening
+                  <br />
+                  in Ottawa
                 </h1>
                 <p>
                   Live concerts, Senators games, festivals, comedy nights — your one-stop
