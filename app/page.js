@@ -608,26 +608,9 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <div className="oilers-grid">
+                  <div className="events-grid">
                     {homeOilersEvents.map((ev, i) => (
-                      <div
-                        key={ev.id}
-                        className="oilers-card fade-up"
-                        style={{ animationDelay: `${i * 0.08}s` }}
-                        onClick={() => {
-                          if (ev.url && ev.url !== "#") window.open(ev.url, "_blank");
-                        }}
-                      >
-                        <div className="oilers-card-top">
-                          <div className="oilers-rel-badge">{fmt.relative(ev.date)}</div>
-                          <div className="oilers-time">{fmt.time(ev.date)}</div>
-                        </div>
-                        <h4>{ev.name}</h4>
-                        <div className="oilers-venue">📍 {ev.venue}</div>
-                        {ev.priceMin && (
-                          <div className="oilers-price">From ${ev.priceMin} CAD</div>
-                        )}
-                      </div>
+                      <EventCard key={ev.id} ev={ev} index={i} />
                     ))}
                   </div>
                 </div>
