@@ -308,6 +308,31 @@ export default function Home() {
   const [isLightMode, setIsLightMode] = useState(false);
 
   useEffect(() => {
+    // Only detect location once per session to allow users to switch freely
+    if (sessionStorage.getItem("locationDetected")) return;
+    sessionStorage.setItem("locationDetected", "true");
+
+    fetch("https://ipapi.co/json/")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.city) return;
+        const city = data.city.toLowerCase();
+        const routes = {
+          toronto: "/toronto",
+          vancouver: "/vancouver",
+          calgary: "/calgary",
+          montreal: "/montreal",
+          winnipeg: "/winnipeg",
+          ottawa: "/ottawa",
+        };
+        if (routes[city]) {
+          window.location.href = routes[city];
+        }
+      })
+      .catch((err) => console.log("Location detection failed:", err));
+  }, []);
+
+  useEffect(() => {
     if (isLightMode) {
       document.body.classList.add('theme-light');
     } else {
