@@ -1,7 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-const API_KEY = "CZh3AiubZmcsAENwPOyUU5J0ZL0Ff2fA";
 const MONTHS = [
   "January", "February", "March", "April", "May", "June", "July",
   "August", "September", "October", "November", "December",
@@ -328,6 +328,7 @@ function FeaturedCard({ ev, index }) {
 }
 
 import { CITIES } from "../data/cities";
+import Link from "next/link";
 
 export default function CityPage({ cityId = "edmonton" }) {
   const config = CITIES[cityId] || CITIES["edmonton"];
@@ -335,13 +336,20 @@ export default function CityPage({ cityId = "edmonton" }) {
   const [allEvents, setAllEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(false);
-  const [activePage, setActivePage] = useState("home"); // home | events
+  const [activePage, setActivePage] = useState("home"); // home | events | shop | about
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeView, setActiveView] = useState("calendar"); // calendar | list | map
-  const [isLightMode, setIsLightMode] = useState(false);
+  const [isLightMode, setIsLightMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("themeMode") === "light";
+    }
+    return false;
+  });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(12);
 
   useEffect(() => {
     // Only detect location once per session to allow users to switch freely
@@ -372,11 +380,23 @@ export default function CityPage({ cityId = "edmonton" }) {
     document.body.classList.add(config.theme);
     if (isLightMode) {
       document.body.classList.add('theme-light');
+      localStorage.setItem("themeMode", "light");
     } else {
       document.body.classList.remove('theme-light');
+      localStorage.setItem("themeMode", "dark");
     }
     return () => document.body.classList.remove(config.theme);
   }, [isLightMode, config.theme]);
+
+  // Dynamic page title
+  useEffect(() => {
+    document.title = `${config.name} Weekend — Everything Happening in ${config.name}`;
+  }, [config.name]);
+
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(12);
+  }, [activeFilter, searchQuery]);
 
   const fetchEvents = useCallback(async (dateToFetch) => {
     setLoading(true);
@@ -386,7 +406,7 @@ export default function CityPage({ cityId = "edmonton" }) {
       const end = new Date(dateToFetch.getFullYear(), dateToFetch.getMonth() + 3, 0);
       const s = start.toISOString().split(".")[0] + "Z";
       const e = end.toISOString().split(".")[0] + "Z";
-      const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${API_KEY}&city=Edmonton&stateCode=AB&countryCode=CA&startDateTime=${s}&endDateTime=${e}&size=199&sort=date,asc`;
+      const url = `/api/events?city=${encodeURIComponent(config.apiCity)}&stateCode=${encodeURIComponent(config.apiState)}&startDateTime=${encodeURIComponent(s)}&endDateTime=${encodeURIComponent(e)}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`API error ${res.status}`);
       const data = await res.json();
@@ -398,7 +418,7 @@ export default function CityPage({ cityId = "edmonton" }) {
       setIsDemo(true);
     }
     setLoading(false);
-  }, []);
+  }, [config.apiCity, config.apiState]);
 
   useEffect(() => {
     fetchEvents(currentDate);
@@ -447,7 +467,7 @@ export default function CityPage({ cityId = "edmonton" }) {
     const concerts = allEvents.filter((ev) => ev.category === "Concert").length;
 
     return { thisMonth, thisWeek, oilers, concerts };
-  }, [allEvents, currentDate]);
+  }, [allEvents, currentDate, config.teamSearch]);
 
   const thisWeekEvents = useMemo(() => {
     const today = new Date();
@@ -546,16 +566,24 @@ export default function CityPage({ cityId = "edmonton" }) {
         {/* NAV */}
         <nav>
           <div className="nav-inner">
-            <div className="nav-logo" onClick={() => setActivePage("home")}>
-              <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff", border: "1px solid rgba(255, 76, 0, 0.3)" }} />
+            <div className="nav-logo" onClick={() => { setActivePage("home"); setMobileMenuOpen(false); }}>
+              <img src="/logo.png" alt={`${config.name} Weekend Logo`} style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff", border: "1px solid rgba(255, 76, 0, 0.3)" }} />
               <span className="nav-logo-text">
                 {config.name}<span>Weekend</span>
               </span>
             </div>
-            <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: "2px", whiteSpace: "nowrap" }}>
+
+            {/* Hamburger */}
+            <button className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+              <span className={`hamburger-line ${mobileMenuOpen ? "open" : ""}`}></span>
+              <span className={`hamburger-line ${mobileMenuOpen ? "open" : ""}`}></span>
+              <span className={`hamburger-line ${mobileMenuOpen ? "open" : ""}`}></span>
+            </button>
+
+            <div className={`nav-right ${mobileMenuOpen ? "mobile-open" : ""}`}>
               <button
                 className={`nav-btn ${activePage === "home" ? "active" : ""}`}
-                onClick={() => setActivePage("home")}
+                onClick={() => { setActivePage("home"); setMobileMenuOpen(false); }}
               >
                 Home
               </button>
@@ -569,28 +597,29 @@ export default function CityPage({ cityId = "edmonton" }) {
                   <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
                 </button>
                 <div className="nav-dropdown-content">
-                  <a href="/">Edmonton</a>
-                  <a href="/toronto">Toronto</a>
-                  <a href="/vancouver">Vancouver</a>
-                  <a href="/calgary">Calgary</a>
-                  <a href="/montreal">Montreal</a>
-                  <a href="/winnipeg">Winnipeg</a>
-                  <a href="/ottawa">Ottawa</a>
+                  {Object.values(CITIES).map(c => (
+                    <Link key={c.id} href={c.id === 'edmonton' ? '/' : `/${c.id}`} onClick={() => setMobileMenuOpen(false)}>{c.name}</Link>
+                  ))}
                 </div>
               </div>
 
               <button
                 className={`nav-btn ${activePage === "shop" ? "active" : ""}`}
-                onClick={() => setActivePage("shop")}
+                onClick={() => { setActivePage("shop"); setMobileMenuOpen(false); }}
               >
                 Shop
               </button>
-              <a href="#" className="nav-btn">About</a>
+              <button
+                className={`nav-btn ${activePage === "about" ? "active" : ""}`}
+                onClick={() => { setActivePage("about"); setMobileMenuOpen(false); }}
+              >
+                About
+              </button>
 
               <button
-                className="nav-btn"
+                className="nav-btn theme-toggle"
                 onClick={() => setIsLightMode(!isLightMode)}
-                style={{ padding: '8px', borderRadius: '50%', background: 'var(--surface2)', border: '1px solid var(--border)' }}
+                aria-label="Toggle theme"
               >
                 {isLightMode ? '🌙' : '☀️'}
               </button>
@@ -734,7 +763,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                 <h2>Never Miss an Event</h2>
                 <p>
                   Bookmark this page and check back anytime. We pull fresh event data
-                  from Ticketmaster so you always know what's happening in {config.name}.
+                  from Ticketmaster so you always know what&apos;s happening in {config.name}.
                 </p>
                 <button
                   className="btn-primary"
@@ -890,10 +919,15 @@ export default function CityPage({ cityId = "edmonton" }) {
                           <span className="upcoming-count">{upcomingEvents.length} events</span>
                         </div>
                         <div className="events-grid" style={{ marginTop: "16px" }}>
-                          {upcomingEvents.slice(0, 12).map((ev, i) => (
+                          {upcomingEvents.slice(0, visibleCount).map((ev, i) => (
                             <EventCard key={ev.id} ev={ev} index={i} />
                           ))}
                         </div>
+                        {visibleCount < upcomingEvents.length && (
+                          <div style={{ textAlign: "center", marginTop: "24px" }}>
+                            <button className="btn-outline" onClick={() => setVisibleCount(prev => prev + 12)}>Load More Events ({upcomingEvents.length - visibleCount} remaining)</button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -911,11 +945,18 @@ export default function CityPage({ cityId = "edmonton" }) {
                           <p>No events found. Try adjusting your filters.</p>
                         </div>
                       ) : (
-                        <div className="events-grid">
-                          {upcomingEvents.map((ev, i) => (
-                            <EventCard key={ev.id} ev={ev} index={i} />
-                          ))}
-                        </div>
+                        <>
+                          <div className="events-grid">
+                            {upcomingEvents.slice(0, visibleCount).map((ev, i) => (
+                              <EventCard key={ev.id} ev={ev} index={i} />
+                            ))}
+                          </div>
+                          {visibleCount < upcomingEvents.length && (
+                            <div style={{ textAlign: "center", marginTop: "24px" }}>
+                              <button className="btn-outline" onClick={() => setVisibleCount(prev => prev + 12)}>Load More Events ({upcomingEvents.length - visibleCount} remaining)</button>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   )}
@@ -995,6 +1036,76 @@ export default function CityPage({ cityId = "edmonton" }) {
           </div>
         )}
 
+        {/* ABOUT PAGE */}
+        {activePage === "about" && (
+          <div id="about-page" style={{ padding: "80px 24px" }} className="fade-in">
+            <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+              <div className="section-header">
+                <div className="section-bar" style={{ background: "var(--accent)" }}></div>
+                <h2 className="section-title">About {config.name} Weekend</h2>
+              </div>
+
+              <div style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "32px" }}>
+                <div className="stat-card" style={{ padding: "32px" }}>
+                  <h3 style={{ fontSize: "22px", fontWeight: 800, marginBottom: "16px", color: "var(--accent)" }}>🎯 Our Mission</h3>
+                  <p style={{ color: "var(--text2)", lineHeight: "1.8", fontSize: "16px" }}>
+                    {config.name} Weekend is the ultimate local events calendar built specifically for {config.name} locals. We aggregate real-time data from Ticketmaster to bring you every concert, {config.teamName} game, festival, comedy show, and more — all in one beautiful, easy-to-use platform.
+                  </p>
+                </div>
+
+                <div className="stat-card" style={{ padding: "32px" }}>
+                  <h3 style={{ fontSize: "22px", fontWeight: 800, marginBottom: "16px", color: "var(--accent)" }}>🏒 Why We Built This</h3>
+                  <p style={{ color: "var(--text2)", lineHeight: "1.8", fontSize: "16px" }}>
+                    We got tired of scrolling through dozens of websites just to find out what&apos;s happening this weekend. So we built the definitive source — a single page that shows you everything from sold-out {config.teamName} playoff games to hidden gem comedy nights at local venues.
+                  </p>
+                </div>
+
+                <div className="stat-card" style={{ padding: "32px" }}>
+                  <h3 style={{ fontSize: "22px", fontWeight: 800, marginBottom: "16px", color: "var(--accent)" }}>⚡ How It Works</h3>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginTop: "16px" }}>
+                    <div style={{ textAlign: "center", padding: "20px" }}>
+                      <div style={{ fontSize: "36px", marginBottom: "12px" }}>📡</div>
+                      <h4 style={{ fontWeight: 700, marginBottom: "8px" }}>Live Data</h4>
+                      <p style={{ color: "var(--text2)", fontSize: "14px" }}>Events pulled from Ticketmaster in real-time</p>
+                    </div>
+                    <div style={{ textAlign: "center", padding: "20px" }}>
+                      <div style={{ fontSize: "36px", marginBottom: "12px" }}>🌍</div>
+                      <h4 style={{ fontWeight: 700, marginBottom: "8px" }}>Auto Detection</h4>
+                      <p style={{ color: "var(--text2)", fontSize: "14px" }}>We detect your city and show local events</p>
+                    </div>
+                    <div style={{ textAlign: "center", padding: "20px" }}>
+                      <div style={{ fontSize: "36px", marginBottom: "12px" }}>📅</div>
+                      <h4 style={{ fontWeight: 700, marginBottom: "8px" }}>Add to Calendar</h4>
+                      <p style={{ color: "var(--text2)", fontSize: "14px" }}>Download .ics files for any event instantly</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="stat-card" style={{ padding: "32px" }}>
+                  <h3 style={{ fontSize: "22px", fontWeight: 800, marginBottom: "16px", color: "var(--accent)" }}>🏙️ Supported Cities</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", marginTop: "12px" }}>
+                    {Object.values(CITIES).map(c => (
+                      <Link key={c.id} href={c.id === 'edmonton' ? '/' : `/${c.id}`} style={{ padding: "8px 20px", borderRadius: "8px", background: "rgba(var(--accent-rgb), 0.1)", border: "1px solid rgba(var(--accent-rgb), 0.2)", color: "var(--accent)", fontWeight: 600, fontSize: "14px", transition: "all 0.2s" }}>
+                        {c.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="stat-card" style={{ padding: "32px", textAlign: "center" }}>
+                  <h3 style={{ fontSize: "22px", fontWeight: 800, marginBottom: "16px", color: "var(--accent)" }}>💼 A Product by TownMediaLabs</h3>
+                  <p style={{ color: "var(--text2)", lineHeight: "1.8", fontSize: "16px" }}>
+                    Built with ❤️ in Canada. Part of the TownMediaLabs family of hyper-local digital products.
+                  </p>
+                  <div style={{ marginTop: "24px" }}>
+                    <button className="btn-primary" onClick={() => setActivePage("events")}>Browse Events →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* FOOTER */}
         <footer>
           <div className="footer-inner">
@@ -1006,7 +1117,7 @@ export default function CityPage({ cityId = "edmonton" }) {
             </div>
             <p className="footer-desc">
               Built for {config.name} locals who want
-              to know what's happening in their city.
+              to know what&apos;s happening in their city.
             </p>
             <div className="footer-socials">
               <span className="footer-social">@{config.name.toLowerCase()}weekend</span>
