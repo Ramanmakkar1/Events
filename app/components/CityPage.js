@@ -295,7 +295,11 @@ function FeaturedCard({ ev, index }) {
   );
 }
 
-export default function Home() {
+import { CITIES } from "../data/cities";
+
+export default function CityPage({ cityId = "edmonton" }) {
+  const config = CITIES[cityId] || CITIES["edmonton"];
+
   const [allEvents, setAllEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(false);
@@ -333,12 +337,14 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    document.body.classList.add(config.theme);
     if (isLightMode) {
       document.body.classList.add('theme-light');
     } else {
       document.body.classList.remove('theme-light');
     }
-  }, [isLightMode]);
+    return () => document.body.classList.remove(config.theme);
+  }, [isLightMode, config.theme]);
 
   const fetchEvents = useCallback(async (dateToFetch) => {
     setLoading(true);
@@ -348,7 +354,7 @@ export default function Home() {
       const end = new Date(dateToFetch.getFullYear(), dateToFetch.getMonth() + 3, 0);
       const s = start.toISOString().split(".")[0] + "Z";
       const e = end.toISOString().split(".")[0] + "Z";
-      const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${API_KEY}&city=Montreal&stateCode=QC&countryCode=CA&startDateTime=${s}&endDateTime=${e}&size=199&sort=date,asc`;
+      const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${API_KEY}&city=Edmonton&stateCode=AB&countryCode=CA&startDateTime=${s}&endDateTime=${e}&size=199&sort=date,asc`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`API error ${res.status}`);
       const data = await res.json();
@@ -404,7 +410,7 @@ export default function Home() {
       return d >= 0 && d < 7;
     }).length;
     const oilers = allEvents.filter(
-      (ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("canadien")
+      (ev) => ev.category === "Sports" && ev.name.toLowerCase().includes(config.teamSearch)
     ).length;
     const concerts = allEvents.filter((ev) => ev.category === "Concert").length;
 
@@ -434,7 +440,7 @@ export default function Home() {
 
   const homeOilersEvents = useMemo(() => {
     return allEvents
-      .filter((ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("canadien"))
+      .filter((ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("oiler"))
       .slice(0, 8);
   }, [allEvents]);
 
@@ -511,7 +517,7 @@ export default function Home() {
             <div className="nav-logo" onClick={() => setActivePage("home")}>
               <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff", border: "1px solid rgba(255, 76, 0, 0.3)" }} />
               <span className="nav-logo-text">
-                Montreal<span>Weekend</span>
+                {config.name}<span>Weekend</span>
               </span>
             </div>
             <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: "2px", whiteSpace: "nowrap" }}>
@@ -580,15 +586,13 @@ export default function Home() {
             <section className="hero">
               <div className="hero-inner fade-up">
                 <div className="hero-badge">
-                  <span>MONTREAL • QUEBEC • CANADA</span>
+                  <span>{config.name.toUpperCase()} • {config.provFull} • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening
-                  <br />
-                  in Montreal
+                  Everything Happening<br />in {config.name}
                 </h1>
                 <p>
-                  Live concerts, Canadiens games, festivals, comedy nights — your one-stop
+                  Live concerts, {config.teamName} games, festivals, comedy nights — your one-stop
                   calendar for the city. Updated in real time.
                 </p>
                 <div className="hero-btns">
@@ -624,7 +628,7 @@ export default function Home() {
                 <div className="stat-card fade-up" style={{ animationDelay: "0.2s" }}>
                   <div className="stat-icon">🏒</div>
                   <div className="stat-num">{loading ? "—" : homeStats.oilers}</div>
-                  <div className="stat-label">Canadiens games</div>
+                  <div className="stat-label">{config.teamName} games</div>
                 </div>
                 <div className="stat-card fade-up" style={{ animationDelay: "0.3s" }}>
                   <div className="stat-icon">🎵</div>
@@ -640,7 +644,7 @@ export default function Home() {
                 <div className="content-inner">
                   <div className="section-header">
                     <div className="section-bar"></div>
-                    <h2 className="section-title">This Week in Montreal</h2>
+                    <h2 className="section-title">This Week in {config.name}</h2>
                   </div>
                   <div className="events-grid">
                     {thisWeekEvents.map((ev, i) => (
@@ -676,10 +680,10 @@ export default function Home() {
                     <div className="oilers-icon">🏒</div>
                     <div>
                       <h2 style={{ fontSize: "28px", fontWeight: 900, letterSpacing: "-1px" }}>
-                        Montreal <span style={{ color: "var(--accent)" }}>Canadiens</span>
+                        {config.name} <span style={{ color: "var(--accent)" }}>{config.teamName}</span>
                       </h2>
                       <p style={{ color: "var(--text2)", fontSize: "14px" }}>
-                        Upcoming games at Bell Centre
+                        Upcoming games at {config.arena}
                       </p>
                     </div>
                   </div>
@@ -698,7 +702,7 @@ export default function Home() {
                 <h2>Never Miss an Event</h2>
                 <p>
                   Bookmark this page and check back anytime. We pull fresh event data
-                  from Ticketmaster so you always know what's happening in Montreal.
+                  from Ticketmaster so you always know what's happening in {config.name}.
                 </p>
                 <button
                   className="btn-primary"
@@ -923,7 +927,7 @@ export default function Home() {
             <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
               <div className="section-header">
                 <div className="section-bar" style={{ background: "var(--accent)" }}></div>
-                <h2 className="section-title">Exclusive Canadiens Memorabilia</h2>
+                <h2 className="section-title">Exclusive {config.teamName} Memorabilia</h2>
               </div>
               <p style={{ color: "var(--text2)", marginBottom: "32px", maxWidth: "600px", fontSize: "16px", lineHeight: "1.6" }}>
                 Authentic, game-worn and signed gear. Due to extremely high demand during playoff season, all items are currently out of stock. Check back later for restocks!
@@ -931,10 +935,10 @@ export default function Home() {
               
               <div className="events-grid">
                 {[
-                  { name: "Canadiens Autographed Home Jersey", price: 1250, img: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=600&h=400&fit=crop" },
-                  { name: "Canadiens Signed Game Stick", price: 850, img: "https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?w=600&h=400&fit=crop" },
-                  { name: "Official Canadiens Game Puck (Signed)", price: 299, img: "https://images.unsplash.com/photo-1549646320-c255d49133bd?w=600&h=400&fit=crop" },
-                  { name: "Canadiens Limited Edition Framed Photo", price: 450, img: "https://images.unsplash.com/photo-1505367332454-e4c19ea5518b?w=600&h=400&fit=crop" },
+                  { name: `${config.teamName} Autographed Home Jersey`, price: 1250, img: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=600&h=400&fit=crop" },
+                  { name: `${config.teamName} Signed Game Stick`, price: 850, img: "https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?w=600&h=400&fit=crop" },
+                  { name: `Official ${config.teamName} Game Puck (Signed)`, price: 299, img: "https://images.unsplash.com/photo-1549646320-c255d49133bd?w=600&h=400&fit=crop" },
+                  { name: `${config.teamName} Limited Edition Framed Photo`, price: 450, img: "https://images.unsplash.com/photo-1505367332454-e4c19ea5518b?w=600&h=400&fit=crop" },
                 ].map((item, i) => (
                   <div key={i} className="event-card fade-up group" style={{ animationDelay: `${i * 0.1}s`, background: `linear-gradient(135deg, rgba(var(--oilers-blue-rgb), 0.6), rgba(0,0,0,0.8))` }}>
                     <div className="event-card-img" style={{ backgroundImage: `url('${item.img}')`, filter: "grayscale(30%)", opacity: 0.8 }}>
@@ -961,20 +965,20 @@ export default function Home() {
             <div className="footer-logo">
               <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff" }} />
               <span className="footer-logo-text">
-                Montreal<span>Weekend</span>
+                {config.name}<span>Weekend</span>
               </span>
             </div>
             <p className="footer-desc">
-              Built for Montreal locals who want
+              Built for {config.name} locals who want
               to know what's happening in their city.
             </p>
             <div className="footer-socials">
-              <span className="footer-social">@montrealweekend</span>
-              <span className="footer-social">@montrealweekend</span>
-              <span className="footer-social">@montrealweekend</span>
+              <span className="footer-social">@{config.name.toLowerCase()}weekend</span>
+              <span className="footer-social">@{config.name.toLowerCase()}weekend</span>
+              <span className="footer-social">@{config.name.toLowerCase()}weekend</span>
             </div>
             <p className="footer-copy">
-              © {new Date().getFullYear()} Edmonton Weekend • Edmonton, Ontario 🇨🇦
+              © {new Date().getFullYear()} {config.name} Weekend • {config.name}, {config.provFull} 🇨🇦
               <br />
               <br />
               Copyright by Townmedialabs.ca
