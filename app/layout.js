@@ -12,7 +12,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "YEGEvents — Everything Happening in Edmonton",
+  title: "Edmonton Weekend — Everything Happening in Edmonton",
   description: "Live concerts, Oilers games, festivals, comedy nights — your one-stop calendar for the city.",
 };
 

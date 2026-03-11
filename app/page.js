@@ -421,9 +421,9 @@ export default function Home() {
         <nav>
           <div className="nav-inner">
             <div className="nav-logo" onClick={() => setActivePage("home")}>
-              <div className="nav-logo-icon">🏒</div>
+              <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff", border: "1px solid rgba(255, 76, 0, 0.3)" }} />
               <span className="nav-logo-text">
-                YEG<span>Events</span>
+                Edmonton<span>Weekend</span>
               </span>
             </div>
             <div className="nav-right">
@@ -829,22 +829,25 @@ export default function Home() {
         <footer>
           <div className="footer-inner">
             <div className="footer-logo">
-              <span>🏒</span>
+              <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff" }} />
               <span className="footer-logo-text">
-                YEG<span>Events</span>
+                Edmonton<span>Weekend</span>
               </span>
             </div>
             <p className="footer-desc">
-              Live event data powered by Ticketmaster. Built for Edmontonians who want
+              Built for Edmontonians who want
               to know what's happening in their city.
             </p>
             <div className="footer-socials">
-              <span className="footer-social">@yegevents</span>
-              <span className="footer-social">@yegevents</span>
-              <span className="footer-social">@yegevents</span>
+              <span className="footer-social">@edmontonweekend</span>
+              <span className="footer-social">@edmontonweekend</span>
+              <span className="footer-social">@edmontonweekend</span>
             </div>
             <p className="footer-copy">
-              © {new Date().getFullYear()} YEGEvents • Edmonton, Alberta 🇨🇦
+              © {new Date().getFullYear()} Edmonton Weekend • Edmonton, Alberta 🇨🇦
+              <br />
+              <br />
+              Copyright by Townmedialabs.ca
             </p>
           </div>
         </footer>
