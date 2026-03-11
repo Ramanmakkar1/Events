@@ -732,7 +732,7 @@ export default function Home() {
                                 No events match your filters for this day.
                               </p>
                             ) : (
-                              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                              <div className="events-grid">
                                 {selectedDayEvents.map((ev, i) => (
                                   <EventCard key={ev.id} ev={ev} index={i} />
                                 ))}
