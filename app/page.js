@@ -762,51 +762,9 @@ export default function Home() {
                           <span style={{ color: "var(--accent)" }}>▸</span> Coming Up Next
                           <span className="upcoming-count">{upcomingEvents.length} events</span>
                         </div>
-                        <div className="compact-rows">
+                        <div className="events-grid" style={{ marginTop: "16px" }}>
                           {upcomingEvents.slice(0, 12).map((ev, i) => (
-                            <div
-                              key={ev.id}
-                              className="compact-row fade-up"
-                              style={{ animationDelay: `${i * 0.04}s` }}
-                              onClick={() => {
-                                if (ev.url && ev.url !== "#") window.open(ev.url, "_blank");
-                              }}
-                            >
-                              <div
-                                className="compact-date-box"
-                                style={{
-                                  background: `linear-gradient(135deg, ${ev.meta.bg}, rgba(0,0,0,0.3))`,
-                                  border: `1px solid ${ev.meta.accent}30`,
-                                }}
-                              >
-                                <span
-                                  className="compact-date-month"
-                                  style={{ color: ev.meta.accent }}
-                                >
-                                  {ev.date
-                                    .toLocaleDateString("en-US", { month: "short" })
-                                    .toUpperCase()}
-                                </span>
-                                <span className="compact-date-day">{ev.date.getDate()}</span>
-                              </div>
-                              <div className="compact-info">
-                                <div className="compact-name">{ev.name}</div>
-                                <div className="compact-meta">
-                                  {fmt.time(ev.date)} • {ev.venue}
-                                </div>
-                              </div>
-                              <div className="compact-right">
-                                {ev.priceMin && (
-                                  <span
-                                    className="compact-price"
-                                    style={{ color: ev.meta.accent }}
-                                  >
-                                    ${ev.priceMin}+
-                                  </span>
-                                )}
-                                <span className="compact-arrow">→</span>
-                              </div>
-                            </div>
+                            <EventCard key={ev.id} ev={ev} index={i} />
                           ))}
                         </div>
                       </div>
