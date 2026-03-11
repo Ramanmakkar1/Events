@@ -174,12 +174,39 @@ function EventCard({ ev, index }) {
     if (navigator.share) {
       navigator.share({
         title: ev.name,
-        text: `Check out \${ev.name} happening at \${ev.venue}!`,
+        text: `Check out ${ev.name} happening at ${ev.venue}!`,
         url: ev.url || window.location.href,
       }).catch(console.error);
     } else {
       alert("Sharing is not supported on this browser.");
     }
+  };
+
+  const handleAddToCalendar = (e) => {
+    e.stopPropagation();
+    const startStr = ev.date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const endDt = new Date(ev.date.getTime() + 2 * 60 * 60 * 1000);
+    const endStr = endDt.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+URL:${ev.url}
+DTSTART:${startStr}
+DTEND:${endStr}
+SUMMARY:${ev.name}
+DESCRIPTION:Tickets: ${ev.url}
+LOCATION:${ev.venue}
+END:VEVENT
+END:VCALENDAR`;
+
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute("download", `${ev.name.replace(/\\s+/g, "_")}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const priceHTML = ev.priceMin ? (
@@ -237,9 +264,14 @@ function EventCard({ ev, index }) {
               </span>
             </div>
           )}
-          <button className="share-btn" onClick={handleShare} style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '4px' }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
-          </button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button className="share-btn" onClick={handleShare} style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '4px' }} title="Share Event">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
+            </button>
+            <button className="share-btn" onClick={handleAddToCalendar} style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '4px' }} title="Add to Calendar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /><path d="M8 18h.01" /><path d="M12 18h.01" /><path d="M16 18h.01" /></svg>
+            </button>
+          </div>
         </div>
         <h4 style={{ transform: "translateZ(30px)" }}>{ev.name}</h4>
         <div className="event-card-meta" style={{ transform: "translateZ(20px)" }}>
@@ -950,7 +982,11 @@ export default function CityPage({ cityId = "edmonton" }) {
                         <span className="event-card-cat-label" style={{ color: "var(--accent)" }}>Authentic Signed</span>
                       </div>
                       <h4>{item.name}</h4>
-                      <div className="event-card-price" style={{ background: "rgba(var(--accent-rgb), 0.15)", color: "var(--accent)" }}>${item.price} CAD</div>
+                      <div className="event-card-price" style={{ background: "rgba(var(--accent-rgb), 0.15)", color: "var(--accent)", marginBottom: "16px" }}>${item.price} CAD</div>
+                      <div className="waitlist-form" style={{ display: "flex", gap: "8px" }}>
+                        <input type="email" placeholder="Email address" style={{ flex: 1, padding: "8px 12px", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)" }} />
+                        <button className="btn-primary" style={{ padding: "8px 16px", borderRadius: "8px", fontSize: "12px", whiteSpace: "nowrap" }} onClick={(e) => { e.target.innerText = "Joined!"; e.target.style.background = "#4CAF50"; e.target.style.borderColor = "#4CAF50"; setTimeout(() => {e.target.innerText = "Notify Me"; e.target.style.background = "var(--accent)"; e.target.style.borderColor = "var(--accent)"; e.target.previousSibling.value = "";}, 2000); }}>Notify Me</button>
+                      </div>
                     </div>
                   </div>
                 ))}
