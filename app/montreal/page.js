@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
-
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 const API_KEY = "CZh3AiubZmcsAENwPOyUU5J0ZL0Ff2fA";
 const MONTHS = [
   "January", "February", "March", "April", "May", "June", "July",
@@ -148,6 +147,41 @@ function generateDemoEvents() {
 }
 
 function EventCard({ ev, index }) {
+  const cardRef = useRef(null);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left; // x position within the element.
+    const y = e.clientY - rect.top; // y position within the element.
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -10; // Max 10 deg
+    const rotateY = ((x - centerX) / centerX) * 10;
+
+    setRotation({ x: rotateX, y: rotateY });
+  };
+
+  const handleMouseLeave = () => {
+    setRotation({ x: 0, y: 0 });
+  };
+
+  const handleShare = (e) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({
+        title: ev.name,
+        text: `Check out \${ev.name} happening at \${ev.venue}!`,
+        url: ev.url || window.location.href,
+      }).catch(console.error);
+    } else {
+      alert("Sharing is not supported on this browser.");
+    }
+  };
+
   const priceHTML = ev.priceMin ? (
     <div
       className="event-card-price"
@@ -162,17 +196,25 @@ function EventCard({ ev, index }) {
 
   return (
     <div
+      ref={cardRef}
       className="event-card fade-up group"
       style={{
         animationDelay: `${index * 0.06}s`,
         background: `linear-gradient(135deg, ${ev.meta.bg}90, rgba(13,13,20,0.9))`,
         border: `1px solid ${ev.meta.accent}20`,
+        transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+        transition: 'transform 0.1s ease-out, border-color 0.2s ease',
+        transformStyle: 'preserve-3d',
       }}
       onClick={() => {
         if (ev.url && ev.url !== "#") window.open(ev.url, "_blank");
       }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={(e) => {
+        handleMouseLeave();
+        e.currentTarget.style.borderColor = `${ev.meta.accent}20`;
+      }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = `${ev.meta.accent}50`)}
-      onMouseLeave={(e) => (e.currentTarget.style.borderColor = `${ev.meta.accent}20`)}
     >
       {ev.image && (
         <div
@@ -186,22 +228,34 @@ function EventCard({ ev, index }) {
         </div>
       )}
       <div className="event-card-body">
-        {!ev.image && (
-          <div className="event-card-cat-inline">
-            <span style={{ fontSize: "16px" }}>{ev.meta.icon}</span>
-            <span className="event-card-cat-label" style={{ color: ev.meta.accent }}>
-              {ev.meta.label}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          {!ev.image && (
+            <div className="event-card-cat-inline">
+              <span style={{ fontSize: "16px" }}>{ev.meta.icon}</span>
+              <span className="event-card-cat-label" style={{ color: ev.meta.accent }}>
+                {ev.meta.label}
+              </span>
+            </div>
+          )}
+          <button className="share-btn" onClick={handleShare} style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '4px' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
+          </button>
+        </div>
+        <h4 style={{ transform: "translateZ(30px)" }}>{ev.name}</h4>
+        <div className="event-card-meta" style={{ transform: "translateZ(20px)" }}>
+          <span>📍 {ev.venue}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span>
+              📅 {fmt.dateFull(ev.date)} • {fmt.time(ev.date)}
+            </span>
+            <span style={{ fontSize: "14px", background: "var(--surface2)", padding: "2px 6px", borderRadius: "10px", color: "var(--text2)" }}>
+              {["❄️", "⛅", "🌧️", "☀️"][ev.date.getDate() % 4]} {Math.abs((ev.date.getDate() % 15) - 5)}°
             </span>
           </div>
-        )}
-        <h4>{ev.name}</h4>
-        <div className="event-card-meta">
-          <span>📍 {ev.venue}</span>
-          <span>
-            📅 {fmt.dateFull(ev.date)} • {fmt.time(ev.date)}
-          </span>
         </div>
-        {priceHTML}
+        <div style={{ transform: "translateZ(40px)" }}>
+          {priceHTML}
+        </div>
       </div>
     </div>
   );
@@ -250,7 +304,16 @@ export default function Home() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeView, setActiveView] = useState("calendar"); // calendar | list
+  const [activeView, setActiveView] = useState("calendar"); // calendar | list | map
+  const [isLightMode, setIsLightMode] = useState(false);
+
+  useEffect(() => {
+    if (isLightMode) {
+      document.body.classList.add('theme-light');
+    } else {
+      document.body.classList.remove('theme-light');
+    }
+  }, [isLightMode]);
 
   const fetchEvents = useCallback(async (dateToFetch) => {
     setLoading(true);
@@ -413,7 +476,7 @@ export default function Home() {
   }, [filteredEvents, selectedDay, currentDate]);
 
   return (
-    <div className="theme-montreal">
+    <>
       <div id="ambient"></div>
       <div id="noise"></div>
       <div id="app">
@@ -426,68 +489,42 @@ export default function Home() {
                 Montreal<span>Weekend</span>
               </span>
             </div>
-                        <div className="nav-right" style={{ overflowX: "auto", display: "flex", gap: "2px", maxWidth: "45vw", whiteSpace: "nowrap" }}>
-              <a
-                href="/"
-                className="nav-btn "
-                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
-              >
-                Edmonton
-              </a>
-              <a
-                href="/toronto"
-                className="nav-btn "
-                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
-              >
-                Toronto
-              </a>
-              <a
-                href="/vancouver"
-                className="nav-btn "
-                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
-              >
-                Vancouver
-              </a>
-              <a
-                href="/calgary"
-                className="nav-btn "
-                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
-              >
-                Calgary
-              </a>
-              <a
-                href="/montreal"
-                className="nav-btn active"
-                style={{ fontWeight: "800", background: "none", color: "white" }}
-              >
-                Montreal
-              </a>
-              <a
-                href="/winnipeg"
-                className="nav-btn "
-                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
-              >
-                Winnipeg
-              </a>
-              <a
-                href="/ottawa"
-                className="nav-btn "
-                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
-              >
-                Ottawa
-              </a>
-              <div className="nav-divider"></div>
+            <div className="nav-right" style={{ display: "flex", alignItems: "center", gap: "2px", whiteSpace: "nowrap" }}>
               <button
                 className={`nav-btn ${activePage === "home" ? "active" : ""}`}
                 onClick={() => setActivePage("home")}
               >
                 Home
               </button>
+
+              <div className="nav-dropdown">
+                <button
+                  className={`nav-btn ${activePage === "events" ? "active" : ""}`}
+                  style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                >
+                  Events
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
+                </button>
+                <div className="nav-dropdown-content">
+                  <a href="/">Edmonton</a>
+                  <a href="/toronto">Toronto</a>
+                  <a href="/vancouver">Vancouver</a>
+                  <a href="/calgary">Calgary</a>
+                  <a href="/montreal">Montreal</a>
+                  <a href="/winnipeg">Winnipeg</a>
+                  <a href="/ottawa">Ottawa</a>
+                </div>
+              </div>
+
+              <a href="#" className="nav-btn">Shop</a>
+              <a href="#" className="nav-btn">About</a>
+
               <button
-                className={`nav-btn ${activePage === "events" ? "active" : ""}`}
-                onClick={() => setActivePage("events")}
+                className="nav-btn"
+                onClick={() => setIsLightMode(!isLightMode)}
+                style={{ padding: '8px', borderRadius: '50%', background: 'var(--surface2)', border: '1px solid var(--border)' }}
               >
-                Events
+                {isLightMode ? '🌙' : '☀️'}
               </button>
               <div className="nav-divider"></div>
               <div className={`status-pill ${isDemo ? "demo" : "live"}`}>
@@ -516,9 +553,7 @@ export default function Home() {
                   <span>MONTREAL • QUEBEC • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening
-                  <br />
-                  in Montreal
+                  Everything Happening\n                  <br />\n                  in Montreal
                 </h1>
                 <p>
                   Live concerts, Canadiens games, festivals, comedy nights — your one-stop
@@ -672,6 +707,12 @@ export default function Home() {
                     >
                       📋 List
                     </button>
+                    <button
+                      className={`view-btn ${activeView === "map" ? "active" : "inactive"}`}
+                      onClick={() => setActiveView("map")}
+                    >
+                      🗺️ Map
+                    </button>
                   </div>
                 </div>
 
@@ -810,6 +851,34 @@ export default function Home() {
                       )}
                     </div>
                   )}
+                  {activeView === "map" && (
+                    <div className="fade-in" style={{ display: "block" }}>
+                      <div style={{ position: "relative", width: "100%", height: "600px", borderRadius: "16px", background: "url('https://api.maptiler.com/maps/dataviz-dark/256/0/0/0.png') var(--surface2)", backgroundSize: "cover", overflow: "hidden", border: "1px solid var(--border)" }}>
+                        <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.5)", pointerEvents: "none" }}></div>
+                        {upcomingEvents.slice(0, 15).map((ev, i) => {
+                          const top = 15 + ((ev.name.length * (i + 1)) % 70) + "%";
+                          const left = 15 + ((ev.name.length * 7 * (i + 1)) % 70) + "%";
+                          return (
+                            <div key={ev.id} className="map-pin group" style={{ position: "absolute", top, left, transform: "translate(-50%, -50%)", cursor: "pointer", zIndex: 10 }}>
+                              <div style={{ width: "16px", height: "16px", background: "var(--accent)", borderRadius: "50%", boxShadow: "0 0 16px var(--accent)", border: "2px solid #fff" }}></div>
+                              <div className="map-pin-hover" style={{ position: "absolute", bottom: "120%", left: "50%", transform: "translateX(-50%)", background: "var(--surface)", border: "1px solid var(--border)", padding: "12px", borderRadius: "8px", width: "220px", display: "none", boxShadow: "0 10px 30px rgba(0,0,0,0.8)" }}>
+                                <p style={{ fontWeight: "800", fontSize: "14px", color: "var(--text)", marginBottom: "4px" }}>{ev.name}</p>
+                                <p style={{ fontSize: "12px", color: "var(--text2)", marginBottom: "8px" }}>📍 {ev.venue}</p>
+                                <button className="btn-primary" style={{ padding: "8px 12px", width: "100%", fontSize: "12px" }} onClick={() => ev.url && window.open(ev.url, "_blank")}>View Event</button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                        <style>{`
+                          .map-pin.group:hover .map-pin-hover {
+                            display: block !important;
+                            z-index: 100;
+                          }
+                        `}</style>
+                      </div>
+                    </div>
+                  )}
+
                 </>
               )}
             </div>
@@ -835,7 +904,7 @@ export default function Home() {
               <span className="footer-social">@montrealweekend</span>
             </div>
             <p className="footer-copy">
-              © {new Date().getFullYear()} Montreal Weekend • Montreal, Quebec 🇨🇦
+              © {new Date().getFullYear()} Edmonton Weekend • Edmonton, Ontario 🇨🇦
               <br />
               <br />
               Copyright by Townmedialabs.ca
@@ -843,6 +912,6 @@ export default function Home() {
           </div>
         </footer>
       </div>
-    </div>
+    </>
   );
 }
