@@ -308,11 +308,13 @@ export default function Home() {
   const [isLightMode, setIsLightMode] = useState(false);
 
   useEffect(() => {
+    document.body.classList.add("theme-toronto");
     if (isLightMode) {
-      document.body.classList.add('theme-light');
+      document.body.classList.add("theme-light");
     } else {
-      document.body.classList.remove('theme-light');
+      document.body.classList.remove("theme-light");
     }
+    return () => document.body.classList.remove("theme-toronto");
   }, [isLightMode]);
 
   const fetchEvents = useCallback(async (dateToFetch) => {

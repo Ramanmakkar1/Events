@@ -308,11 +308,13 @@ export default function Home() {
   const [isLightMode, setIsLightMode] = useState(false);
 
   useEffect(() => {
+    document.body.classList.add("theme-winnipeg");
     if (isLightMode) {
-      document.body.classList.add('theme-light');
+      document.body.classList.add("theme-light");
     } else {
-      document.body.classList.remove('theme-light');
+      document.body.classList.remove("theme-light");
     }
+    return () => document.body.classList.remove("theme-winnipeg");
   }, [isLightMode]);
 
   const fetchEvents = useCallback(async (dateToFetch) => {

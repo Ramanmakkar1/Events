@@ -10,6 +10,9 @@
   --oilers-blue: #041E42;
   --oilers-orange: #FF4C00;
   --accent: #FF4C00;
+  --oilers-blue-rgb: 4, 30, 66;
+  --oilers-orange-rgb: 255, 76, 0;
+  --accent-rgb: 255, 76, 0;
   --font: var(--font-dm-sans), sans-serif;
   --mono: var(--font-jetbrains-mono), monospace;
 }
@@ -29,36 +32,54 @@
   --oilers-blue: #00205B;
   --oilers-orange: #FFFFFF;
   --accent: #2e7bff;
+  --oilers-blue-rgb: 0, 32, 91;
+  --oilers-orange-rgb: 255, 255, 255;
+  --accent-rgb: 46, 123, 255;
 }
 
 .theme-vancouver {
   --oilers-blue: #00205B;
   --oilers-orange: #00843D;
   --accent: #00843D;
+  --oilers-blue-rgb: 0, 32, 91;
+  --oilers-orange-rgb: 0, 132, 61;
+  --accent-rgb: 0, 132, 61;
 }
 
 .theme-montreal {
   --oilers-blue: #192168;
   --oilers-orange: #AF1E2D;
   --accent: #AF1E2D;
+  --oilers-blue-rgb: 25, 33, 104;
+  --oilers-orange-rgb: 175, 30, 45;
+  --accent-rgb: 175, 30, 45;
 }
 
 .theme-calgary {
   --oilers-blue: #111111;
   --oilers-orange: #C8102E;
   --accent: #C8102E;
+  --oilers-blue-rgb: 17, 17, 17;
+  --oilers-orange-rgb: 200, 16, 46;
+  --accent-rgb: 200, 16, 46;
 }
 
 .theme-winnipeg {
   --oilers-blue: #041E42;
   --oilers-orange: #004C97;
   --accent: #004C97;
+  --oilers-blue-rgb: 4, 30, 66;
+  --oilers-orange-rgb: 0, 76, 151;
+  --accent-rgb: 0, 76, 151;
 }
 
 .theme-ottawa {
   --oilers-blue: #000000;
   --oilers-orange: #C52032;
   --accent: #C52032;
+  --oilers-blue-rgb: 0, 0, 0;
+  --oilers-orange-rgb: 197, 32, 50;
+  --accent-rgb: 197, 32, 50;
 }
 
 * {
@@ -78,7 +99,7 @@ body {
 }
 
 ::selection {
-  background: rgba(255, 76, 0, 0.3);
+  background: rgba(var(--accent-rgb), 0.3);
   color: #fff;
 }
 
@@ -158,11 +179,11 @@ a {
 
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(255, 76, 0, 0.15);
+    box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.15);
   }
 
   50% {
-    box-shadow: 0 0 40px rgba(255, 76, 0, 0.3);
+    box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.3);
   }
 }
 
@@ -179,8 +200,8 @@ a {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse 80% 50% at 20% -10%, rgba(4, 30, 66, 0.5), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(255, 76, 0, 0.12), transparent 60%),
+  background: radial-gradient(ellipse 80% 50% at 20% -10%, rgba(var(--oilers-blue-rgb), 0.5), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(var(--accent-rgb), 0.12), transparent 60%),
     radial-gradient(circle at 50% 50%, rgba(13, 13, 20, 0.8), transparent);
 }
 
@@ -229,8 +250,8 @@ nav {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--oilers-blue), #0a3a7a);
-  border: 1px solid rgba(255, 76, 0, 0.3);
+  background: linear-gradient(135deg, var(--oilers-blue), var(--accent));
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -265,7 +286,7 @@ nav {
 }
 
 .nav-btn.active {
-  background: rgba(255, 76, 0, 0.12);
+  background: rgba(var(--accent-rgb), 0.12);
   color: var(--accent);
 }
 
@@ -325,7 +346,7 @@ nav {
 
 /* DEMO BANNER */
 #demo-banner {
-  background: linear-gradient(90deg, rgba(255, 193, 7, 0.08), rgba(255, 76, 0, 0.08));
+  background: linear-gradient(90deg, rgba(255, 193, 7, 0.08), rgba(var(--accent-rgb), 0.08));
   border-bottom: 1px solid rgba(255, 193, 7, 0.15);
   padding: 10px 24px;
   text-align: center;
@@ -354,8 +375,8 @@ nav {
   gap: 8px;
   padding: 6px 16px;
   border-radius: 100px;
-  background: rgba(255, 76, 0, 0.08);
-  border: 1px solid rgba(255, 76, 0, 0.2);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
   margin-bottom: 24px;
 }
 
@@ -371,7 +392,7 @@ nav {
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -2px;
-  background: linear-gradient(135deg, #ffffff 0%, #c0c0d0 50%, #FF4C00 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #c0c0d0 50%, var(--accent) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -402,7 +423,7 @@ nav {
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
-  box-shadow: 0 4px 24px rgba(255, 76, 0, 0.3);
+  box-shadow: 0 4px 24px rgba(var(--accent-rgb), 0.3);
   transition: transform 0.2s;
 }
 
@@ -656,8 +677,8 @@ nav {
 /* OILERS */
 .oilers-section {
   padding: 64px 24px;
-  background: linear-gradient(180deg, rgba(4, 30, 66, 0.25) 0%, var(--bg) 100%);
-  border-top: 1px solid rgba(255, 76, 0, 0.1);
+  background: linear-gradient(180deg, rgba(var(--oilers-blue-rgb), 0.25) 0%, var(--bg) 100%);
+  border-top: 1px solid rgba(var(--accent-rgb), 0.1);
 }
 
 .oilers-header {
@@ -671,8 +692,8 @@ nav {
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--oilers-blue), #0a3a7a);
-  border: 2px solid rgba(255, 76, 0, 0.4);
+  background: linear-gradient(135deg, var(--oilers-blue), var(--accent));
+  border: 2px solid rgba(var(--accent-rgb), 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -687,8 +708,8 @@ nav {
 }
 
 .oilers-card {
-  background: linear-gradient(135deg, rgba(4, 30, 66, 0.6), rgba(0, 0, 0, 0.3));
-  border: 1px solid rgba(255, 76, 0, 0.15);
+  background: linear-gradient(135deg, rgba(var(--oilers-blue-rgb), 0.6), rgba(0, 0, 0, 0.3));
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
   border-radius: 16px;
   padding: 20px;
   transition: transform 0.2s, border-color 0.2s;
@@ -697,7 +718,7 @@ nav {
 
 .oilers-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 76, 0, 0.4);
+  border-color: rgba(var(--accent-rgb), 0.4);
 }
 
 .oilers-card-top {
@@ -710,7 +731,7 @@ nav {
 .oilers-rel-badge {
   padding: 6px 10px;
   border-radius: 8px;
-  background: rgba(255, 76, 0, 0.12);
+  background: rgba(var(--accent-rgb), 0.12);
   font-size: 11px;
   font-weight: 700;
   color: var(--accent);
@@ -896,7 +917,7 @@ footer {
 
 .view-btn.active {
   border: 1px solid var(--accent);
-  background: rgba(255, 76, 0, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent);
 }
 
@@ -928,7 +949,7 @@ footer {
 
 .filter-pill.active {
   border: 1px solid var(--accent);
-  background: rgba(255, 76, 0, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
   color: var(--accent);
 }
 
