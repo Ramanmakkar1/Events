@@ -585,7 +585,7 @@ export default function Home() {
                 <h1>
                   Everything Happening
                   <br />
-                  in Edmonton
+                  in Ottawa
                 </h1>
                 <p>
                   Live concerts, Senators games, festivals, comedy nights — your one-stop

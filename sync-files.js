@@ -90,7 +90,7 @@ function processContent(str, cityConfig) {
 
     // Hero
     str = str.replace(/EDMONTON • ALBERTA • CANADA/g, cityConfig.name.toUpperCase() + " • " + cityConfig.provFull + " • CANADA");
-    str = str.replace(/Everything Happening\\n                  <br \/>\\n                  in Edmonton/g, "Everything Happening\\n                  <br />\\n                  in " + cityConfig.name);
+    str = str.replace(/Everything Happening\s*<br \/>\s*in Edmonton/g, "Everything Happening\n                  <br />\n                  in " + cityConfig.name);
     str = str.replace(/Oilers games/g, cityConfig.teamName + " games");
 
     // Content header

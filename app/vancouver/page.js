@@ -585,7 +585,7 @@ export default function Home() {
                 <h1>
                   Everything Happening
                   <br />
-                  in Edmonton
+                  in Vancouver
                 </h1>
                 <p>
                   Live concerts, Canucks games, festivals, comedy nights — your one-stop
