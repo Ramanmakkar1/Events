@@ -260,7 +260,7 @@ export default function Home() {
       const end = new Date(dateToFetch.getFullYear(), dateToFetch.getMonth() + 3, 0);
       const s = start.toISOString().split(".")[0] + "Z";
       const e = end.toISOString().split(".")[0] + "Z";
-      const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${API_KEY}&city=Edmonton&stateCode=AB&countryCode=CA&startDateTime=${s}&endDateTime=${e}&size=199&sort=date,asc`;
+      const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${API_KEY}&city=Montreal&stateCode=QC&countryCode=CA&startDateTime=${s}&endDateTime=${e}&size=199&sort=date,asc`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`API error ${res.status}`);
       const data = await res.json();
@@ -316,7 +316,7 @@ export default function Home() {
       return d >= 0 && d < 7;
     }).length;
     const oilers = allEvents.filter(
-      (ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("oiler")
+      (ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("canadien")
     ).length;
     const concerts = allEvents.filter((ev) => ev.category === "Concert").length;
 
@@ -346,7 +346,7 @@ export default function Home() {
 
   const homeOilersEvents = useMemo(() => {
     return allEvents
-      .filter((ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("oiler"))
+      .filter((ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("canadien"))
       .slice(0, 8);
   }, [allEvents]);
 
@@ -413,7 +413,7 @@ export default function Home() {
   }, [filteredEvents, selectedDay, currentDate]);
 
   return (
-    <>
+    <div className="theme-montreal">
       <div id="ambient"></div>
       <div id="noise"></div>
       <div id="app">
@@ -423,47 +423,53 @@ export default function Home() {
             <div className="nav-logo" onClick={() => setActivePage("home")}>
               <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff", border: "1px solid rgba(255, 76, 0, 0.3)" }} />
               <span className="nav-logo-text">
-                Edmonton<span>Weekend</span>
+                Montreal<span>Weekend</span>
               </span>
             </div>
                         <div className="nav-right" style={{ overflowX: "auto", display: "flex", gap: "2px", maxWidth: "45vw", whiteSpace: "nowrap" }}>
               <a
                 href="/"
-                className="nav-btn active"
-                style={{ fontWeight: "800", background: "none", color: "white" }}
+                className="nav-btn "
+                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
               >
                 Edmonton
-              </a>\n              <a
+              </a>
+              <a
                 href="/toronto"
                 className="nav-btn "
                 style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
               >
                 Toronto
-              </a>\n              <a
+              </a>
+              <a
                 href="/vancouver"
                 className="nav-btn "
                 style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
               >
                 Vancouver
-              </a>\n              <a
+              </a>
+              <a
                 href="/calgary"
                 className="nav-btn "
                 style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
               >
                 Calgary
-              </a>\n              <a
+              </a>
+              <a
                 href="/montreal"
-                className="nav-btn "
-                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
+                className="nav-btn active"
+                style={{ fontWeight: "800", background: "none", color: "white" }}
               >
                 Montreal
-              </a>\n              <a
+              </a>
+              <a
                 href="/winnipeg"
                 className="nav-btn "
                 style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
               >
                 Winnipeg
-              </a>\n              <a
+              </a>
+              <a
                 href="/ottawa"
                 className="nav-btn "
                 style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
@@ -507,13 +513,15 @@ export default function Home() {
             <section className="hero">
               <div className="hero-inner fade-up">
                 <div className="hero-badge">
-                  <span>EDMONTON • ALBERTA • CANADA</span>
+                  <span>MONTREAL • QUEBEC • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening\n                  <br />\n                  in Edmonton
+                  Everything Happening
+                  <br />
+                  in Montreal
                 </h1>
                 <p>
-                  Live concerts, Oilers games, festivals, comedy nights — your one-stop
+                  Live concerts, Canadiens games, festivals, comedy nights — your one-stop
                   calendar for the city. Updated in real time.
                 </p>
                 <div className="hero-btns">
@@ -549,7 +557,7 @@ export default function Home() {
                 <div className="stat-card fade-up" style={{ animationDelay: "0.2s" }}>
                   <div className="stat-icon">🏒</div>
                   <div className="stat-num">{loading ? "—" : homeStats.oilers}</div>
-                  <div className="stat-label">Oilers games</div>
+                  <div className="stat-label">Canadiens games</div>
                 </div>
                 <div className="stat-card fade-up" style={{ animationDelay: "0.3s" }}>
                   <div className="stat-icon">🎵</div>
@@ -565,7 +573,7 @@ export default function Home() {
                 <div className="content-inner">
                   <div className="section-header">
                     <div className="section-bar"></div>
-                    <h2 className="section-title">This Week in Edmonton</h2>
+                    <h2 className="section-title">This Week in Montreal</h2>
                   </div>
                   <div className="events-grid">
                     {thisWeekEvents.map((ev, i) => (
@@ -601,10 +609,10 @@ export default function Home() {
                     <div className="oilers-icon">🏒</div>
                     <div>
                       <h2 style={{ fontSize: "28px", fontWeight: 900, letterSpacing: "-1px" }}>
-                        Edmonton <span style={{ color: "var(--accent)" }}>Oilers</span>
+                        Montreal <span style={{ color: "var(--accent)" }}>Canadiens</span>
                       </h2>
                       <p style={{ color: "var(--text2)", fontSize: "14px" }}>
-                        Upcoming games at Rogers Place
+                        Upcoming games at Bell Centre
                       </p>
                     </div>
                   </div>
@@ -640,7 +648,7 @@ export default function Home() {
                 <h2>Never Miss an Event</h2>
                 <p>
                   Bookmark this page and check back anytime. We pull fresh event data
-                  from Ticketmaster so you always know what's happening in Edmonton.
+                  from Ticketmaster so you always know what's happening in Montreal.
                 </p>
                 <button
                   className="btn-primary"
@@ -831,20 +839,20 @@ export default function Home() {
             <div className="footer-logo">
               <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff" }} />
               <span className="footer-logo-text">
-                Edmonton<span>Weekend</span>
+                Montreal<span>Weekend</span>
               </span>
             </div>
             <p className="footer-desc">
-              Built for Edmonton locals who want
+              Built for Montreal locals who want
               to know what's happening in their city.
             </p>
             <div className="footer-socials">
-              <span className="footer-social">@edmontonweekend</span>
-              <span className="footer-social">@edmontonweekend</span>
-              <span className="footer-social">@edmontonweekend</span>
+              <span className="footer-social">@montrealweekend</span>
+              <span className="footer-social">@montrealweekend</span>
+              <span className="footer-social">@montrealweekend</span>
             </div>
             <p className="footer-copy">
-              © {new Date().getFullYear()} Edmonton Weekend • Edmonton, Ontario 🇨🇦
+              © {new Date().getFullYear()} Montreal Weekend • Montreal, Quebec 🇨🇦
               <br />
               <br />
               Copyright by Townmedialabs.ca
@@ -852,6 +860,6 @@ export default function Home() {
           </div>
         </footer>
       </div>
-    </>
+    </div>
   );
 }

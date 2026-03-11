@@ -20,6 +20,36 @@
   --accent: #2e7bff;
 }
 
+.theme-vancouver {
+  --oilers-blue: #00205B;
+  --oilers-orange: #00843D;
+  --accent: #00843D;
+}
+
+.theme-montreal {
+  --oilers-blue: #192168;
+  --oilers-orange: #AF1E2D;
+  --accent: #AF1E2D;
+}
+
+.theme-calgary {
+  --oilers-blue: #111111;
+  --oilers-orange: #C8102E;
+  --accent: #C8102E;
+}
+
+.theme-winnipeg {
+  --oilers-blue: #041E42;
+  --oilers-orange: #004C97;
+  --accent: #004C97;
+}
+
+.theme-ottawa {
+  --oilers-blue: #000000;
+  --oilers-orange: #C52032;
+  --accent: #C52032;
+}
+
 * {
   margin: 0;
   padding: 0;

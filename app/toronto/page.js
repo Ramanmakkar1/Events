@@ -426,10 +426,10 @@ export default function Home() {
                 Toronto<span>Weekend</span>
               </span>
             </div>
-            <div className="nav-right">
+                        <div className="nav-right" style={{ overflowX: "auto", display: "flex", gap: "2px", maxWidth: "45vw", whiteSpace: "nowrap" }}>
               <a
                 href="/"
-                className="nav-btn"
+                className="nav-btn "
                 style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
               >
                 Edmonton
@@ -440,6 +440,41 @@ export default function Home() {
                 style={{ fontWeight: "800", background: "none", color: "white" }}
               >
                 Toronto
+              </a>
+              <a
+                href="/vancouver"
+                className="nav-btn "
+                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
+              >
+                Vancouver
+              </a>
+              <a
+                href="/calgary"
+                className="nav-btn "
+                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
+              >
+                Calgary
+              </a>
+              <a
+                href="/montreal"
+                className="nav-btn "
+                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
+              >
+                Montreal
+              </a>
+              <a
+                href="/winnipeg"
+                className="nav-btn "
+                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
+              >
+                Winnipeg
+              </a>
+              <a
+                href="/ottawa"
+                className="nav-btn "
+                style={{ fontWeight: "800", background: "none", color: "var(--text2)" }}
+              >
+                Ottawa
               </a>
               <div className="nav-divider"></div>
               <button
@@ -808,7 +843,7 @@ export default function Home() {
               </span>
             </div>
             <p className="footer-desc">
-              Built for Torontonians who want
+              Built for Toronto locals who want
               to know what's happening in their city.
             </p>
             <div className="footer-socials">
