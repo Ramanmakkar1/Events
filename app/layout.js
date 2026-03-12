@@ -12,8 +12,12 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "Edmonton Weekend — Everything Happening in Edmonton",
-  description: "Live concerts, Oilers games, festivals, comedy nights — your one-stop calendar for the city.",
+  metadataBase: new URL('https://edmontonweekend.ca'),
+  alternates: {
+    canonical: '/',
+  },
+  title: "Things to do in Edmonton This Weekend | Concerts, Sports & Events",
+  description: "Discover what's happening in Edmonton this weekend. Live concerts, Oilers games, festivals, and comedy nights. Your ultimate local event calendar.",
 };
 
 export default function RootLayout({ children }) {

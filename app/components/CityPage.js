@@ -72,49 +72,49 @@ function parseEvent(ev) {
     address: ev._embedded?.venues?.[0]?.address?.line1 || "",
     date: dt,
     localDate,
-    priceMin: ev.priceRanges?.[0]?.min || null,
-    priceMax: ev.priceRanges?.[0]?.max || null,
+    priceMin: ev.priceRanges?.[0]?.min ?? null,
+    priceMax: ev.priceRanges?.[0]?.max ?? null,
     url: ev.url || "#",
     image: ev.images?.sort((a, b) => (b.width || 0) - (a.width || 0))?.[0]?.url || null,
     status: ev.dates?.status?.code || "onsale",
   };
 }
 
-function generateDemoEvents() {
+function generateDemoEvents(config) {
   const now = new Date();
   const y = now.getFullYear();
   const m = now.getMonth();
   const demoList = [
-    ["Edmonton Oilers vs Calgary Flames", "Sports", "Rogers Place", 85, 350, 0],
-    ["Edmonton Oilers vs Vancouver Canucks", "Sports", "Rogers Place", 65, 280, 3],
-    ["Edmonton Oilers vs Toronto Maple Leafs", "Sports", "Rogers Place", 95, 500, 7],
-    ["Edmonton Oilers vs Winnipeg Jets", "Sports", "Rogers Place", 60, 260, 12],
-    ["Edmonton Oilers vs Montreal Canadiens", "Sports", "Rogers Place", 70, 300, 18],
-    ["Edmonton Oilers vs Colorado Avalanche", "Sports", "Rogers Place", 90, 400, 24],
-    ["Karan Aujla — It Was All A Dream Tour", "Concert", "Rogers Place", 89, 250, 1],
-    ["Diljit Dosanjh — Dil-Luminati Tour", "Concert", "Commonwealth Stadium", 99, 350, 5],
-    ["AP Dhillon Live in Edmonton", "Concert", "Rogers Place", 79, 220, 9],
-    ["Drake — Anita Max Wynn Tour", "Concert", "Rogers Place", 120, 450, 14],
-    ["The Weeknd — After Hours Til Dawn", "Concert", "Commonwealth Stadium", 110, 380, 20],
-    ["Morgan Wallen — One Night At A Time", "Concert", "Rogers Place", 85, 300, 22],
-    ["Edmonton Symphony Orchestra", "Concert", "Winspear Centre", 35, 110, 4],
-    ["Taylor Swift — The Eras Tour", "Concert", "Commonwealth Stadium", 150, 800, 27],
-    ["Kevin Hart — Reality Check", "Comedy", "Rogers Place", 65, 180, 6],
-    ["Hasan Minhaj Live", "Comedy", "Northern Alberta Jubilee Auditorium", 55, 120, 11],
-    ["Russell Peters — Act Your Age", "Comedy", "Rogers Place", 60, 150, 16],
-    ["Punjabi Comedy Night", "Comedy", "Citadel Theatre", 40, 80, 21],
-    ["Cirque du Soleil — KOOZA", "Theatre", "Edmonton EXPO Centre", 45, 165, 2],
-    ["Frozen — The Musical", "Theatre", "Northern Alberta Jubilee Auditorium", 55, 200, 10],
-    ["Edmonton International Fringe Festival", "Theatre", "Old Strathcona", 15, 45, 17],
-    ["Les Misérables", "Theatre", "Northern Alberta Jubilee Auditorium", 50, 180, 25],
-    ["K-Days Festival", "Festival", "Edmonton EXPO Centre", 30, 60, 8],
-    ["Edmonton Folk Music Festival", "Festival", "Gallagher Park", 40, 120, 15],
-    ["Heritage Festival", "Festival", "Hawrelak Park", 0, 0, 19],
-    ["Taste of Edmonton", "Festival", "Churchill Square", 5, 15, 23],
-    ["Monster Jam", "Family", "Commonwealth Stadium", 30, 85, 3],
-    ["Disney On Ice — Find Your Hero", "Family", "Rogers Place", 35, 120, 13],
-    ["PAW Patrol Live!", "Family", "Northern Alberta Jubilee Auditorium", 25, 75, 19],
-    ["Harlem Globetrotters", "Family", "Rogers Place", 30, 90, 26],
+    [`${config.name} ${config.teamName} vs Calgary Flames`, "Sports", config.arena, 85, 350, 0],
+    [`${config.name} ${config.teamName} vs Vancouver Canucks`, "Sports", config.arena, 65, 280, 3],
+    [`${config.name} ${config.teamName} vs Toronto Maple Leafs`, "Sports", config.arena, 95, 500, 7],
+    [`${config.name} ${config.teamName} vs Winnipeg Jets`, "Sports", config.arena, 60, 260, 12],
+    [`${config.name} ${config.teamName} vs Montreal Canadiens`, "Sports", config.arena, 70, 300, 18],
+    [`${config.name} ${config.teamName} vs Colorado Avalanche`, "Sports", config.arena, 90, 400, 24],
+    [`Karan Aujla — It Was All A Dream Tour`, "Concert", config.arena, 89, 250, 1],
+    [`Diljit Dosanjh — Dil-Luminati Tour`, "Concert", `${config.name} Stadium`, 99, 350, 5],
+    [`AP Dhillon Live in ${config.name}`, "Concert", config.arena, 79, 220, 9],
+    [`Drake — Anita Max Wynn Tour`, "Concert", config.arena, 120, 450, 14],
+    [`The Weeknd — After Hours Til Dawn`, "Concert", `${config.name} Stadium`, 110, 380, 20],
+    [`Morgan Wallen — One Night At A Time`, "Concert", config.arena, 85, 300, 22],
+    [`${config.name} Symphony Orchestra`, "Concert", `${config.name} Theatre`, 35, 110, 4],
+    [`Taylor Swift — The Eras Tour`, "Concert", `${config.name} Stadium`, 150, 800, 27],
+    [`Kevin Hart — Reality Check`, "Comedy", config.arena, 65, 180, 6],
+    [`Hasan Minhaj Live`, "Comedy", `${config.name} Performing Arts Centre`, 55, 120, 11],
+    [`Russell Peters — Act Your Age`, "Comedy", config.arena, 60, 150, 16],
+    [`Punjabi Comedy Night`, "Comedy", `${config.name} Theatre`, 40, 80, 21],
+    [`Cirque du Soleil — KOOZA`, "Theatre", `${config.name} EXPO Centre`, 45, 165, 2],
+    [`Frozen — The Musical`, "Theatre", `${config.name} Performing Arts Centre`, 55, 200, 10],
+    [`${config.name} International Fringe Festival`, "Theatre", `Downtown ${config.name}`, 15, 45, 17],
+    [`Les Misérables`, "Theatre", `${config.name} Performing Arts Centre`, 50, 180, 25],
+    [`Summer Music Festival`, "Festival", `${config.name} EXPO Centre`, 30, 60, 8],
+    [`${config.name} Folk Music Festival`, "Festival", `${config.name} Park`, 40, 120, 15],
+    [`Heritage Festival`, "Festival", `${config.name} Park`, 0, 0, 19],
+    [`Taste of ${config.name}`, "Festival", `${config.name} Square`, 5, 15, 23],
+    [`Monster Jam`, "Family", `${config.name} Stadium`, 30, 85, 3],
+    [`Disney On Ice — Find Your Hero`, "Family", config.arena, 35, 120, 13],
+    [`PAW Patrol Live!`, "Family", `${config.name} Performing Arts Centre`, 25, 75, 19],
+    [`Harlem Globetrotters`, "Family", config.arena, 30, 90, 26],
   ];
   const imgs = [
     "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&h=400&fit=crop",
@@ -127,7 +127,9 @@ function generateDemoEvents() {
   return demoList.map(([name, cat, venue, pMin, pMax, dayOff], i) => {
     const meta = CAT_META[cat] || CAT_META.Miscellaneous;
     const day = Math.min((dayOff % 28) + 1, 28);
-    const dt = new Date(y, m, day, 19 + (i % 3), i % 2 === 0 ? 0 : 30);
+    // Scatter demo events across an entire 12-month period
+    const monthOffset = i % 12; 
+    const dt = new Date(y, m + monthOffset, day, 19 + (i % 3), i % 2 === 0 ? 0 : 30);
     return {
       id: `demo-${i}`,
       name,
@@ -137,16 +139,16 @@ function generateDemoEvents() {
       address: "",
       date: dt,
       localDate: dt.toISOString().split("T")[0],
-      priceMin: pMin || null,
-      priceMax: pMax || null,
+      priceMin: pMin ?? null,
+      priceMax: pMax ?? null,
       url: "#",
-      image: i < 12 ? imgs[i % imgs.length] : null,
+      image: imgs[i % imgs.length],
       status: "onsale",
     };
   });
 }
 
-function EventCard({ ev, index }) {
+function EventCard({ ev, index, onToast, isSaved, onSave }) {
   const cardRef = useRef(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
@@ -178,7 +180,8 @@ function EventCard({ ev, index }) {
         url: ev.url || window.location.href,
       }).catch(console.error);
     } else {
-      alert("Sharing is not supported on this browser.");
+      if (onToast) onToast("Sharing is not supported on this browser.", "error");
+      else alert("Sharing is not supported on this browser.");
     }
   };
 
@@ -207,18 +210,25 @@ END:VCALENDAR`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    if (onToast) onToast("Added to your calendar!", "success");
   };
 
-  const priceHTML = ev.priceMin ? (
+  const priceHTML = (ev.priceMin !== null && ev.priceMin !== undefined) ? (
     <div
       className="event-card-price"
       style={{ background: `${ev.meta.accent}15`, color: ev.meta.accent }}
     >
-      ${ev.priceMin}
-      {ev.priceMax ? ` – $${ev.priceMax}` : "+"} CAD
+      {ev.priceMin === 0 ? "Free" : `$${ev.priceMin}`}
+      {ev.priceMax && ev.priceMax !== ev.priceMin ? ` – $${ev.priceMax}` : (ev.priceMin !== 0 ? "+" : "")} {ev.priceMin !== 0 ? "CAD" : ""}
     </div>
   ) : (
-    <div className="event-card-notba">Price TBA</div>
+    <div
+      className="event-card-notba"
+      style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text2)", fontSize: "12px", fontWeight: "600", textTransform: "uppercase", letterSpacing: "1px" }}
+    >
+      Check Ticketmaster
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
   );
 
   return (
@@ -248,6 +258,7 @@ END:VCALENDAR`;
           className="event-card-img"
           style={{ backgroundImage: `url('${ev.image}')` }}
         >
+          <img src={ev.image} alt={`${ev.name} at ${ev.venue}`} style={{ display: 'none' }} loading="lazy" />
           <div className="event-card-img-overlay"></div>
           <div className="event-card-cat-badge" style={{ color: ev.meta.accent }}>
             {ev.meta.icon} {ev.meta.label}
@@ -264,12 +275,23 @@ END:VCALENDAR`;
               </span>
             </div>
           )}
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button className="share-btn" onClick={handleShare} style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '4px' }} title="Share Event">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
+          <div style={{ display: 'flex', gap: '16px' }}>
+            <button className="share-btn" onClick={(e) => { e.stopPropagation(); ev.url && ev.url !== "#" ? window.open(ev.url, "_blank") : null; }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'none', border: 'none', color: ev.meta.accent, cursor: 'pointer', padding: '0' }} title="Buy Tickets">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5v2"/><path d="M15 11v2"/><path d="M15 17v2"/><path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7a2 2 0 0 1 2-2z"/></svg>
+              <span style={{ fontSize: '9px', fontWeight: 600 }}>Buy</span>
             </button>
-            <button className="share-btn" onClick={handleAddToCalendar} style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '4px' }} title="Add to Calendar">
+            <button className="share-btn" onClick={(e) => { e.stopPropagation(); if (onSave) onSave(); }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'none', border: 'none', color: isSaved ? 'var(--accent)' : 'var(--text2)', cursor: 'pointer', padding: '0' }} title={isSaved ? "Remove Saved" : "Save Event"}>
+              {isSaved ? <svg fill="currentColor" width="18" height="18" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 
+              : <svg fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>}
+              <span style={{ fontSize: '9px', fontWeight: 600 }}>{isSaved ? "Saved" : "Save"}</span>
+            </button>
+            <button className="share-btn" onClick={handleShare} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '0' }} title="Share Event">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
+              <span style={{ fontSize: '9px', fontWeight: 600 }}>Share</span>
+            </button>
+            <button className="share-btn" onClick={handleAddToCalendar} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', padding: '0' }} title="Add to Calendar">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /><path d="M8 14h.01" /><path d="M12 14h.01" /><path d="M16 14h.01" /><path d="M8 18h.01" /><path d="M12 18h.01" /><path d="M16 18h.01" /></svg>
+              <span style={{ fontSize: '9px', fontWeight: 600 }}>Add</span>
             </button>
           </div>
         </div>
@@ -306,7 +328,9 @@ function FeaturedCard({ ev, index }) {
         <div
           className="featured-card-bg"
           style={{ backgroundImage: `url('${ev.image}')` }}
-        ></div>
+        >
+          <img src={ev.image} alt={`Featured event: ${ev.name} at ${ev.venue}`} style={{ display: 'none' }} loading="lazy" />
+        </div>
       )}
       <div className="featured-card-overlay"></div>
       <div className="featured-card-content">
@@ -336,20 +360,98 @@ export default function CityPage({ cityId = "edmonton" }) {
   const [allEvents, setAllEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDemo, setIsDemo] = useState(false);
-  const [activePage, setActivePage] = useState("home"); // home | events | shop | about
+  const [activePage, setActivePage] = useState("home"); // home | events | shop | about | saved
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeView, setActiveView] = useState("calendar"); // calendar | list | map
-  const [isLightMode, setIsLightMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("themeMode") === "light";
-    }
-    return false;
-  });
+  const [activeView, setActiveView] = useState("list"); // list | map
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
+  const [statsMonthOffset, setStatsMonthOffset] = useState(0);
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = useCallback((message, type = "success") => {
+    const id = Date.now() + Math.random();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3000);
+  }, []);
+
+  // Bookmarks Logic
+  const [savedEventIds, setSavedEventIds] = useState([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("savedEvents");
+    if (saved) {
+      try {
+        setSavedEventIds(JSON.parse(saved));
+      } catch (e) {}
+    }
+  }, []);
+
+  const toggleSaveEvent = useCallback((eventId) => {
+    setSavedEventIds(prev => {
+      const next = prev.includes(eventId) ? prev.filter(id => id !== eventId) : [...prev, eventId];
+      localStorage.setItem("savedEvents", JSON.stringify(next));
+      if (!prev.includes(eventId)) {
+        addToast("Event saved successfully!", "success");
+      }
+      return next;
+    });
+  }, [addToast]);
+
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    const timeoutId = setTimeout(() => {
+      const elements = document.querySelectorAll(".fade-up:not(.is-visible), .fade-in:not(.is-visible)");
+      elements.forEach((el) => observer.observe(el));
+    }, 100);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeoutId);
+    };
+  }, [allEvents, activePage, activeView, visibleCount, statsMonthOffset, activeFilter, searchQuery]);
+
+  // Typewriter effect logic
+  const heroPhrases = useMemo(() => ["Live Concerts", `${config.teamName} Games`, "Comedy Nights", "Festivals"], [config.teamName]);
+  const [typewriterText, setTypewriterText] = useState("");
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let ticker = setTimeout(() => {
+      const currentPhrase = heroPhrases[phraseIndex];
+      if (!isDeleting) {
+        setTypewriterText(currentPhrase.substring(0, typewriterText.length + 1));
+        if (typewriterText === currentPhrase) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        setTypewriterText(currentPhrase.substring(0, typewriterText.length - 1));
+        if (typewriterText === "") {
+          setIsDeleting(false);
+          setPhraseIndex((prev) => (prev + 1) % heroPhrases.length);
+        }
+      }
+    }, isDeleting ? 40 : 100);
+    return () => clearTimeout(ticker);
+  }, [typewriterText, isDeleting, phraseIndex, heroPhrases]);
 
   useEffect(() => {
     // Only detect location once per session to allow users to switch freely
@@ -378,15 +480,10 @@ export default function CityPage({ cityId = "edmonton" }) {
 
   useEffect(() => {
     document.body.classList.add(config.theme);
-    if (isLightMode) {
-      document.body.classList.add('theme-light');
-      localStorage.setItem("themeMode", "light");
-    } else {
-      document.body.classList.remove('theme-light');
-      localStorage.setItem("themeMode", "dark");
-    }
+    document.body.classList.remove('theme-light');
+    localStorage.removeItem("themeMode");
     return () => document.body.classList.remove(config.theme);
-  }, [isLightMode, config.theme]);
+  }, [config.theme]);
 
   // Dynamic page title
   useEffect(() => {
@@ -396,14 +493,23 @@ export default function CityPage({ cityId = "edmonton" }) {
   // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(12);
-  }, [activeFilter, searchQuery]);
+  }, [activeFilter, searchQuery, statsMonthOffset]);
 
-  const fetchEvents = useCallback(async (dateToFetch) => {
+  const fetchedMonthsRef = useRef(new Set());
+
+  const fetchEvents = useCallback(async (dateToFetch, offset) => {
+    const targetDate = new Date(dateToFetch.getFullYear(), dateToFetch.getMonth() + offset, 1);
+    const monthKey = `${config.id}-${targetDate.getFullYear()}-${targetDate.getMonth()}`;
+    
+    if (fetchedMonthsRef.current.has(monthKey)) {
+      return;
+    }
+    
     setLoading(true);
     setIsDemo(false);
     try {
-      const start = new Date(dateToFetch.getFullYear(), dateToFetch.getMonth(), 1);
-      const end = new Date(dateToFetch.getFullYear(), dateToFetch.getMonth() + 3, 0);
+      const start = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+      const end = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0, 23, 59, 59);
       const s = start.toISOString().split(".")[0] + "Z";
       const e = end.toISOString().split(".")[0] + "Z";
       const url = `/api/events?city=${encodeURIComponent(config.apiCity)}&stateCode=${encodeURIComponent(config.apiState)}&startDateTime=${encodeURIComponent(s)}&endDateTime=${encodeURIComponent(e)}`;
@@ -411,23 +517,60 @@ export default function CityPage({ cityId = "edmonton" }) {
       if (!res.ok) throw new Error(`API error ${res.status}`);
       const data = await res.json();
       const newEvents = data._embedded?.events ? data._embedded.events.map(parseEvent) : [];
-      setAllEvents(newEvents);
+      
+      setAllEvents(prev => {
+        // Accumulate events to maintain full data tracking as user scrolls months
+        const combined = [...prev, ...newEvents];
+        // Deduplicate
+        const unique = Array.from(new Map(combined.map(ev => [ev.id, ev])).values());
+        return unique;
+      });
+      fetchedMonthsRef.current.add(monthKey);
     } catch (err) {
       console.error("API unreachable, using demo data:", err);
-      setAllEvents(generateDemoEvents());
-      setIsDemo(true);
+      if (!isDemo) {
+        setAllEvents(generateDemoEvents(config));
+        setIsDemo(true);
+      }
     }
     setLoading(false);
-  }, [config.apiCity, config.apiState]);
+  }, [config, isDemo]);
 
   useEffect(() => {
-    fetchEvents(currentDate);
-  }, [fetchEvents, currentDate]);
+    fetchEvents(currentDate, statsMonthOffset);
+  }, [fetchEvents, currentDate, statsMonthOffset]);
 
   const filteredEvents = useMemo(() => {
     const search = searchQuery.toLowerCase();
+    const todayStr = new Date().toDateString();
+
     return allEvents.filter((ev) => {
-      if (activeFilter !== "all" && ev.category !== activeFilter) return false;
+      const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1);
+      
+      if (activeFilter === "today") {
+        if (ev.date.toDateString() !== todayStr) return false;
+      } else {
+        // Globally enforce month offset for everything else
+        if (ev.date.getMonth() !== targetDate.getMonth() || ev.date.getFullYear() !== targetDate.getFullYear()) return false;
+        
+        if (activeFilter === "thisWeek") {
+          if (statsMonthOffset === 0) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const d = (ev.date - today) / 86400000;
+            if (d < 0 || d >= 7) return false;
+          } else {
+            const firstDay = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+            const d = (ev.date - firstDay) / 86400000;
+            if (d < 0 || d >= 7) return false;
+          }
+        } else if (activeFilter === "teamGames") {
+          if (ev.category !== "Sports" || !ev.name.toLowerCase().includes(config.teamSearch)) return false;
+        } else if (activeFilter !== "all" && activeFilter !== "thisMonth" && ev.category !== activeFilter) {
+          return false;
+        }
+      }
+
       if (
         search &&
         !ev.name.toLowerCase().includes(search) &&
@@ -437,69 +580,189 @@ export default function CityPage({ cityId = "edmonton" }) {
       }
       return true;
     });
-  }, [allEvents, activeFilter, searchQuery]);
+  }, [allEvents, activeFilter, searchQuery, currentDate, statsMonthOffset, config.teamSearch]);
+
+  const categoryCounts = useMemo(() => {
+    const todayStr = new Date().toDateString();
+    const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1);
+    
+    // Get all events for the target month
+    const monthEvents = allEvents.filter(ev => 
+      ev.date.getMonth() === targetDate.getMonth() && 
+      ev.date.getFullYear() === targetDate.getFullYear()
+    );
+    
+    // Today check remains absolute
+    const counts = { 
+      all: monthEvents.length, 
+      today: allEvents.filter(ev => ev.date.toDateString() === todayStr).length 
+    };
+    
+    monthEvents.forEach(ev => {
+      counts[ev.category] = (counts[ev.category] || 0) + 1;
+    });
+    return counts;
+  }, [allEvents, currentDate, statsMonthOffset]);
 
   const upcomingEvents = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return filteredEvents
-      .filter((ev) => ev.date >= today)
+      .filter((ev) => {
+        if (statsMonthOffset < 0) return true; // Show all events for past months
+        if (statsMonthOffset === 0 && ev.date < today) return false; // Hide past events in current month
+        return true;
+      })
       .sort((a, b) => a.date - b.date);
-  }, [filteredEvents]);
+  }, [filteredEvents, statsMonthOffset]);
 
-  // Home Page Stats
+  const loadMoreRef = useRef(null);
+
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => prev + 12);
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [upcomingEvents.length, visibleCount]);
+
+  const savedEventsData = useMemo(() => {
+    return allEvents.filter(ev => savedEventIds.includes(ev.id)).sort((a, b) => a.date - b.date);
+  }, [allEvents, savedEventIds]);
+
+  const nextEvent = useMemo(() => {
+    const today = new Date();
+    return allEvents.filter(ev => ev.date >= today).sort((a, b) => a.date - b.date)[0];
+  }, [allEvents]);
+
+  const [timeLeft, setTimeLeft] = useState("");
+
+  useEffect(() => {
+    if (!nextEvent) return;
+    const interval = setInterval(() => {
+      const diff = nextEvent.date.getTime() - new Date().getTime();
+      if (diff <= 0) {
+        setTimeLeft("Happening Now!");
+      } else {
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / 1000 / 60) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        setTimeLeft(`${d}d ${h}h ${m}m ${s}s`);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [nextEvent]);
+
+  // Scroll To Top Logic
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const homeStats = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const y = currentDate.getFullYear();
-    const m = currentDate.getMonth();
+    const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1);
+    const targetY = targetDate.getFullYear();
+    const targetM = targetDate.getMonth();
 
-    const thisMonth = allEvents.filter(
-      (ev) => ev.date.getMonth() === m && ev.date.getFullYear() === y
-    ).length;
-    const thisWeek = allEvents.filter((ev) => {
-      const d = (ev.date - today) / 86400000;
-      return d >= 0 && d < 7;
-    }).length;
-    const oilers = allEvents.filter(
+    const eventsInMonth = allEvents.filter(
+      (ev) => ev.date.getMonth() === targetM && ev.date.getFullYear() === targetY
+    );
+    const thisMonth = eventsInMonth.length;
+    
+    let thisWeek = 0;
+    if (statsMonthOffset === 0) {
+      thisWeek = eventsInMonth.filter((ev) => {
+        const d = (ev.date - today) / 86400000;
+        return d >= 0 && d < 7;
+      }).length;
+    } else {
+      const firstDay = new Date(targetY, targetM, 1);
+      thisWeek = eventsInMonth.filter((ev) => {
+        const d = (ev.date - firstDay) / 86400000;
+        return d >= 0 && d < 7;
+      }).length;
+    }
+
+    const oilers = eventsInMonth.filter(
       (ev) => ev.category === "Sports" && ev.name.toLowerCase().includes(config.teamSearch)
     ).length;
-    const concerts = allEvents.filter((ev) => ev.category === "Concert").length;
+    const concerts = eventsInMonth.filter((ev) => ev.category === "Concert").length;
 
     return { thisMonth, thisWeek, oilers, concerts };
-  }, [allEvents, currentDate, config.teamSearch]);
+  }, [allEvents, currentDate, config.teamSearch, statsMonthOffset]);
 
   const thisWeekEvents = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1);
+    const targetY = targetDate.getFullYear();
+    const targetM = targetDate.getMonth();
+
     return allEvents
       .filter((ev) => {
-        const d = (ev.date - today) / 86400000;
-        return d >= 0 && d < 7;
+        if (ev.date.getMonth() !== targetM || ev.date.getFullYear() !== targetY) return false;
+        if (statsMonthOffset === 0) {
+          const d = (ev.date - today) / 86400000;
+          return d >= 0 && d < 7;
+        } else {
+          const firstDay = new Date(targetY, targetM, 1);
+          const d = (ev.date - firstDay) / 86400000;
+          return d >= 0 && d < 7;
+        }
       })
       .sort((a, b) => a.date - b.date)
       .slice(0, 6);
-  }, [allEvents]);
+  }, [allEvents, currentDate, statsMonthOffset]);
 
   const homeFeaturedEvents = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1);
+    const targetY = targetDate.getFullYear();
+    const targetM = targetDate.getMonth();
+
     return allEvents
-      .filter((ev) => ev.date >= today && ev.image)
+      .filter((ev) => {
+         if (ev.date.getMonth() !== targetM || ev.date.getFullYear() !== targetY) return false;
+         if (statsMonthOffset === 0 && ev.date < today) return false;
+         return ev.image;
+      })
       .sort((a, b) => a.date - b.date)
       .slice(0, 6);
-  }, [allEvents]);
+  }, [allEvents, currentDate, statsMonthOffset]);
 
   const homeOilersEvents = useMemo(() => {
+    const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1);
+    const targetY = targetDate.getFullYear();
+    const targetM = targetDate.getMonth();
+
     return allEvents
-      .filter((ev) => ev.category === "Sports" && ev.name.toLowerCase().includes("oiler"))
+      .filter((ev) => {
+         if (ev.date.getMonth() !== targetM || ev.date.getFullYear() !== targetY) return false;
+         return ev.category === "Sports" && ev.name.toLowerCase().includes(config.teamSearch);
+      })
       .slice(0, 8);
-  }, [allEvents]);
+  }, [allEvents, currentDate, statsMonthOffset, config.teamSearch]);
 
   // Render Calendar Grid
   const CalendarGrid = () => {
-    const y = currentDate.getFullYear();
-    const m = currentDate.getMonth();
+    const targetDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1);
+    const y = targetDate.getFullYear();
+    const m = targetDate.getMonth();
     const firstDow = new Date(y, m, 1).getDay();
     const daysInMonth = new Date(y, m + 1, 0).getDate();
     const today = new Date();
@@ -558,8 +821,46 @@ export default function CityPage({ cityId = "edmonton" }) {
     );
   }, [filteredEvents, selectedDay, currentDate]);
 
+  const jsonLdSchema = useMemo(() => {
+    return {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": upcomingEvents.slice(0, 30).map((ev, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "item": {
+          "@type": "Event",
+          "name": ev.name,
+          "startDate": ev.date.toISOString(),
+          "location": {
+            "@type": "Place",
+            "name": ev.venue,
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": config.name,
+              "addressRegion": config.prov || "AB",
+              "addressCountry": "CA"
+            }
+          },
+          "image": ev.image ? [ev.image] : undefined,
+          "offers": ev.priceMin ? {
+            "@type": "Offer",
+            "url": ev.url,
+            "price": ev.priceMin,
+            "priceCurrency": "CAD",
+            "availability": "https://schema.org/InStock"
+          } : undefined
+        }
+      }))
+    };
+  }, [upcomingEvents, config]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
+      />
       <div id="ambient"></div>
       <div id="noise"></div>
       <div id="app">
@@ -588,17 +889,26 @@ export default function CityPage({ cityId = "edmonton" }) {
                 Home
               </button>
 
-              <div className="nav-dropdown">
+              <div className={`nav-dropdown ${mobileDropdownOpen ? 'expanded' : ''}`}>
                 <button
                   className={`nav-btn ${activePage === "events" ? "active" : ""}`}
-                  style={{ display: "flex", alignItems: "center", gap: "4px" }}
+                  onClick={(e) => {
+                    if (window.innerWidth <= 768) {
+                      e.preventDefault();
+                      setMobileDropdownOpen(!mobileDropdownOpen);
+                    } else {
+                      setActivePage("events");
+                      setMobileMenuOpen(false);
+                    }
+                  }}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "4px" }}
                 >
                   Events
-                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: mobileDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}><path d="M1 1L5 5L9 1" /></svg>
                 </button>
                 <div className="nav-dropdown-content">
                   {Object.values(CITIES).map(c => (
-                    <Link key={c.id} href={c.id === 'edmonton' ? '/' : `/${c.id}`} onClick={() => setMobileMenuOpen(false)}>{c.name}</Link>
+                    <Link key={c.id} href={c.id === 'edmonton' ? '/' : `/${c.id}`} onClick={() => { setMobileMenuOpen(false); setMobileDropdownOpen(false); }}>{c.name}</Link>
                   ))}
                 </div>
               </div>
@@ -615,14 +925,15 @@ export default function CityPage({ cityId = "edmonton" }) {
               >
                 About
               </button>
-
+              
               <button
-                className="nav-btn theme-toggle"
-                onClick={() => setIsLightMode(!isLightMode)}
-                aria-label="Toggle theme"
+                className={`nav-btn ${activePage === "saved" ? "active" : ""}`}
+                style={{ position: 'relative' }}
+                onClick={() => { setActivePage("saved"); setMobileMenuOpen(false); }}
               >
-                {isLightMode ? '🌙' : '☀️'}
+                Saved <span style={{ padding: '2px 6px', background: 'var(--accent)', color: '#fff', borderRadius: '10px', fontSize: '10px', marginLeft: '4px' }}>{savedEventIds.length}</span>
               </button>
+
               <div className="nav-divider"></div>
               <div className={`status-pill ${isDemo ? "demo" : "live"}`}>
                 <div className={`status-dot ${isDemo ? "demo" : "live"}`}></div>
@@ -642,7 +953,7 @@ export default function CityPage({ cityId = "edmonton" }) {
 
         {/* HOME PAGE */}
         {activePage === "home" && (
-          <div id="home-page">
+          <div id="home-page" className="fade-in">
             {/* HERO */}
             <section className="hero">
               <div className="hero-inner fade-up">
@@ -650,54 +961,137 @@ export default function CityPage({ cityId = "edmonton" }) {
                   <span>{config.name.toUpperCase()} • {config.provFull} • CANADA</span>
                 </div>
                 <h1>
-                  Everything Happening<br />in {config.name}
+                  <span style={{ color: "var(--accent)" }}>{typewriterText}</span><span className="cursor-blink">|</span><br />in {config.name}
                 </h1>
-                <p>
-                  Live concerts, {config.teamName} games, festivals, comedy nights — your one-stop
-                  calendar for the city. Updated in real time.
+                <p style={{ maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>
+                  Discover the best things to do in {config.name} this weekend. From electrifying live concerts and {config.teamName} games, to vibrant festivals and comedy nights — your ultimate local event calendar. Updated in real time.
                 </p>
-                <div className="hero-btns">
+
+                <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", marginTop: "32px", animationDelay: "0.2s" }} className="fade-up">
                   <button
                     className="btn-primary"
+                    style={{ margin: 0, height: "48px", borderRadius: "30px", display: "flex", alignItems: "center", padding: "0 24px" }}
                     onClick={() => setActivePage("events")}
                   >
                     Browse Events →
                   </button>
-                  <button
-                    className="btn-outline"
-                    onClick={() => setActivePage("events")}
-                  >
-                    View Calendar
-                  </button>
+
+                  <div className="month-selector" style={{ margin: 0, display: "inline-flex", alignItems: "center", gap: "12px", background: "var(--surface)", padding: "0 16px", borderRadius: "30px", border: "1px solid var(--border)", height: "48px" }}>
+                    <button onClick={() => setStatsMonthOffset(p => p - 1)} style={{ background: "none", border: "none", color: "var(--text2)", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center" }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: "90px" }}>
+                      <span style={{ fontSize: "14px", fontWeight: "700", color: "var(--text)", textAlign: "center", display: "flex", flexDirection: "column", gap: "2px" }}>
+                        <span>{new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                        <span style={{ fontSize: "12px", color: "var(--accent)", fontWeight: "600" }}>{loading ? "..." : homeStats.thisMonth} Events</span>
+                      </span>
+                    </div>
+                    <button onClick={() => setStatsMonthOffset(p => p + 1)} style={{ background: "none", border: "none", color: "var(--text2)", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center" }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                  </div>
+                </div>
+
+
+                <div 
+                  className="hero-categories fade-up" 
+                  style={{ 
+                    display: "flex", 
+                    flexWrap: "nowrap", 
+                    overflowX: "auto", 
+                    gap: "12px", 
+                    marginTop: "24px", 
+                    paddingBottom: "16px",
+                    width: "100vw",
+                    marginLeft: "calc(-50vw + 50%)",
+                    paddingLeft: "max(24px, calc((100vw - 1280px) / 2))",
+                    paddingRight: "max(24px, calc((100vw - 1280px) / 2))",
+                    scrollSnapType: "x mandatory",
+                    scrollbarWidth: "none",
+                    WebkitOverflowScrolling: "touch",
+                    animationDelay: "0.4s" 
+                  }}
+                >
+                  <style>{`.hero-categories::-webkit-scrollbar { display: none; }`}</style>
+                  {Object.entries({ today: { icon: "⏰", label: "Today" }, ...CAT_META }).map(
+                    ([key, val]) => (
+                      <button
+                        key={key}
+                        onClick={() => { setActiveFilter(key); setActivePage("events"); setActiveView("list"); }}
+                        style={{ 
+                          flexShrink: 0,
+                          scrollSnapAlign: "start",
+                          display: "inline-flex", 
+                          alignItems: "center", 
+                          gap: "8px", 
+                          background: "var(--surface)", 
+                          backdropFilter: "blur(10px)",
+                          border: "1px solid rgba(255,255,255,0.05)", 
+                          padding: "10px 20px", 
+                          borderRadius: "30px", 
+                          fontSize: "14px", 
+                          color: "var(--text)", 
+                          cursor: "pointer", 
+                          transition: "all 0.3s ease",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
+                        }}
+                        onMouseEnter={(e) => { 
+                          e.currentTarget.style.background = "var(--surface-light)"; 
+                          e.currentTarget.style.borderColor = "var(--accent)"; 
+                          e.currentTarget.style.transform = "translateY(-2px)";
+                        }}
+                        onMouseLeave={(e) => { 
+                          e.currentTarget.style.background = "var(--surface)"; 
+                          e.currentTarget.style.borderColor = "rgba(255,255,255,0.05)"; 
+                          e.currentTarget.style.transform = "translateY(0)";
+                        }}
+                      >
+                        <span style={{ fontSize: "16px" }}>{val.icon}</span> 
+                        <span style={{ fontWeight: 600 }}>{val.label}</span> 
+                        <span style={{ opacity: 0.8, fontSize: "12px", marginLeft: "4px", background: "rgba(0,0,0,0.3)", padding: "2px 8px", borderRadius: "10px" }}>
+                          {categoryCounts[key] || 0}
+                        </span>
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
             </section>
 
-            {/* STATS */}
-            <section className="stats-section">
-              <div className="stats-grid">
-                <div className="stat-card fade-up" style={{ animationDelay: "0s" }}>
-                  <div className="stat-icon">📅</div>
-                  <div className="stat-num">{loading ? "—" : homeStats.thisMonth}</div>
-                  <div className="stat-label">Events this month</div>
+            {/* FEATURED CAROUSEL */}
+            {homeFeaturedEvents.length > 0 && (
+              <section className="content-section" style={{ position: "relative", overflow: "hidden" }}>
+                <div className="content-inner">
+                  <div className="section-header">
+                    <div className="section-bar purple" style={{ background: "#e040fb" }}></div>
+                    <h2 className="section-title">Featured Events</h2>
+                    
+                    <div style={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
+                      <button 
+                        onClick={() => document.getElementById('featured-carousel').scrollBy({ left: -360, behavior: 'smooth' })}
+                        style={{ width: "36px", height: "36px", borderRadius: "50%", background: "var(--surface)", border: "1px solid var(--border)", color: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "transform 0.2s" }}
+                        onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"}
+                        onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+                      >←</button>
+                      <button 
+                        onClick={() => document.getElementById('featured-carousel').scrollBy({ left: 360, behavior: 'smooth' })}
+                        style={{ width: "36px", height: "36px", borderRadius: "50%", background: "var(--surface)", border: "1px solid var(--border)", color: "var(--text)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "transform 0.2s" }}
+                        onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"}
+                        onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+                      >→</button>
+                    </div>
+                  </div>
+                  
+                  <div className="carousel-viewport fade-up">
+                    <div id="featured-carousel" className="carousel-grid">
+                      {homeFeaturedEvents.map((ev, i) => (
+                        <FeaturedCard key={ev.id} ev={ev} index={i} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div className="stat-card fade-up" style={{ animationDelay: "0.1s" }}>
-                  <div className="stat-icon">🔥</div>
-                  <div className="stat-num">{loading ? "—" : homeStats.thisWeek}</div>
-                  <div className="stat-label">This week</div>
-                </div>
-                <div className="stat-card fade-up" style={{ animationDelay: "0.2s" }}>
-                  <div className="stat-icon">🏒</div>
-                  <div className="stat-num">{loading ? "—" : homeStats.oilers}</div>
-                  <div className="stat-label">{config.teamName} games</div>
-                </div>
-                <div className="stat-card fade-up" style={{ animationDelay: "0.3s" }}>
-                  <div className="stat-icon">🎵</div>
-                  <div className="stat-num">{loading ? "—" : homeStats.concerts}</div>
-                  <div className="stat-label">Concerts</div>
-                </div>
-              </div>
-            </section>
+              </section>
+            )}
 
             {/* THIS WEEK */}
             {thisWeekEvents.length > 0 && (
@@ -705,33 +1099,18 @@ export default function CityPage({ cityId = "edmonton" }) {
                 <div className="content-inner">
                   <div className="section-header">
                     <div className="section-bar"></div>
-                    <h2 className="section-title">This Week in {config.name}</h2>
+                    <h2 className="section-title">{statsMonthOffset === 0 ? "This Week" : "First Week"} in {config.name}</h2>
                   </div>
                   <div className="events-grid">
                     {thisWeekEvents.map((ev, i) => (
-                      <EventCard key={ev.id} ev={ev} index={i} />
+                      <EventCard key={ev.id} ev={ev} index={i} onToast={addToast} isSaved={savedEventIds.includes(ev.id)} onSave={() => toggleSaveEvent(ev.id)} />
                     ))}
                   </div>
                 </div>
               </section>
             )}
 
-            {/* FEATURED */}
-            {homeFeaturedEvents.length > 0 && (
-              <section className="content-section">
-                <div className="content-inner">
-                  <div className="section-header">
-                    <div className="section-bar purple" style={{ background: "#e040fb" }}></div>
-                    <h2 className="section-title">Featured Events</h2>
-                  </div>
-                  <div className="featured-grid">
-                    {homeFeaturedEvents.map((ev, i) => (
-                      <FeaturedCard key={ev.id} ev={ev} index={i} />
-                    ))}
-                  </div>
-                </div>
-              </section>
-            )}
+
 
             {/* OILERS */}
             {homeOilersEvents.length > 0 && (
@@ -750,7 +1129,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                   </div>
                   <div className="events-grid">
                     {homeOilersEvents.map((ev, i) => (
-                      <EventCard key={ev.id} ev={ev} index={i} />
+                      <EventCard key={ev.id} ev={ev} index={i} onToast={addToast} isSaved={savedEventIds.includes(ev.id)} onSave={() => toggleSaveEvent(ev.id)} />
                     ))}
                   </div>
                 </div>
@@ -769,7 +1148,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                   className="btn-primary"
                   onClick={() => setActivePage("events")}
                 >
-                  Explore Full Calendar →
+                  Explore All Events →
                 </button>
               </div>
             </section>
@@ -791,13 +1170,20 @@ export default function CityPage({ cityId = "edmonton" }) {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
-                  <div className="view-toggles">
-                    <button
-                      className={`view-btn ${activeView === "calendar" ? "active" : "inactive"}`}
-                      onClick={() => setActiveView("calendar")}
-                    >
-                      📅 Calendar
-                    </button>
+                  <div className="view-toggles" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", background: "var(--surface)", padding: "6px 16px", borderRadius: "12px", border: "1px solid var(--border)" }}>
+                      <button onClick={(e) => { e.preventDefault(); setStatsMonthOffset(p => p - 1); }} style={{ background: "none", border: "none", color: "var(--text2)", cursor: "pointer", fontSize: "14px", display: "flex", alignItems: "center" }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                      </button>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: "70px" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "700", color: "var(--text)" }}>
+                          {new Date(currentDate.getFullYear(), currentDate.getMonth() + statsMonthOffset, 1).toLocaleString('default', { month: 'short', year: 'numeric' })}
+                        </span>
+                      </div>
+                      <button onClick={(e) => { e.preventDefault(); setStatsMonthOffset(p => p + 1); }} style={{ background: "none", border: "none", color: "var(--text2)", cursor: "pointer", fontSize: "14px", display: "flex", alignItems: "center" }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                      </button>
+                    </div>
                     <button
                       className={`view-btn ${activeView === "list" ? "active" : "inactive"}`}
                       onClick={() => setActiveView("list")}
@@ -814,7 +1200,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                 </div>
 
                 <div className="cat-filters">
-                  {Object.entries({ all: { label: "🔥 All" }, ...CAT_META }).map(
+                  {Object.entries({ all: { label: "🔥 All" }, today: { label: "⏰ Today" }, ...CAT_META }).map(
                     ([key, val]) => (
                       <button
                         key={key}
@@ -823,6 +1209,9 @@ export default function CityPage({ cityId = "edmonton" }) {
                       >
                         {val.icon ? `${val.icon} ` : ""}
                         {val.label}
+                        <span style={{ opacity: 0.6, marginLeft: "4px", fontSize: "11px" }}>
+                          ({categoryCounts[key] || 0})
+                        </span>
                       </button>
                     )
                   )}
@@ -839,6 +1228,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                 </div>
               ) : (
                 <>
+                  {/* 
                   {activeView === "calendar" && (
                     <div className="cal-container fade-in">
                       <div className="cal-wrap">
@@ -905,7 +1295,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                             ) : (
                               <div className="events-grid">
                                 {selectedDayEvents.map((ev, i) => (
-                                  <EventCard key={ev.id} ev={ev} index={i} />
+                                  <EventCard key={ev.id} ev={ev} index={i} onToast={addToast} isSaved={savedEventIds.includes(ev.id)} onSave={() => toggleSaveEvent(ev.id)} />
                                 ))}
                               </div>
                             )}
@@ -920,7 +1310,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                         </div>
                         <div className="events-grid" style={{ marginTop: "16px" }}>
                           {upcomingEvents.slice(0, visibleCount).map((ev, i) => (
-                            <EventCard key={ev.id} ev={ev} index={i} />
+                            <EventCard key={ev.id} ev={ev} index={i} onToast={addToast} isSaved={savedEventIds.includes(ev.id)} onSave={() => toggleSaveEvent(ev.id)} />
                           ))}
                         </div>
                         {visibleCount < upcomingEvents.length && (
@@ -931,6 +1321,7 @@ export default function CityPage({ cityId = "edmonton" }) {
                       </div>
                     </div>
                   )}
+                  */}
 
                   {activeView === "list" && (
                     <div className="fade-in" style={{ display: "block" }}>
@@ -948,12 +1339,12 @@ export default function CityPage({ cityId = "edmonton" }) {
                         <>
                           <div className="events-grid">
                             {upcomingEvents.slice(0, visibleCount).map((ev, i) => (
-                              <EventCard key={ev.id} ev={ev} index={i} />
+                              <EventCard key={ev.id} ev={ev} index={i} onToast={addToast} isSaved={savedEventIds.includes(ev.id)} onSave={() => toggleSaveEvent(ev.id)} />
                             ))}
                           </div>
                           {visibleCount < upcomingEvents.length && (
-                            <div style={{ textAlign: "center", marginTop: "24px" }}>
-                              <button className="btn-outline" onClick={() => setVisibleCount(prev => prev + 12)}>Load More Events ({upcomingEvents.length - visibleCount} remaining)</button>
+                            <div ref={loadMoreRef} style={{ textAlign: "center", marginTop: "32px", marginBottom: "32px" }}>
+                              <div className="skeleton-shimmer" style={{ width: "40px", height: "40px", borderRadius: "50%", margin: "0 auto", animationDuration: "1s" }}></div>
                             </div>
                           )}
                         </>
@@ -1010,8 +1401,29 @@ export default function CityPage({ cityId = "edmonton" }) {
                 {[
                   { name: `${config.teamName} Autographed Home Jersey`, price: 1250, img: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=600&h=400&fit=crop" },
                   { name: `${config.teamName} Signed Game Stick`, price: 850, img: "https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?w=600&h=400&fit=crop" },
-                  { name: `Official ${config.teamName} Game Puck (Signed)`, price: 299, img: "https://images.unsplash.com/photo-1549646320-c255d49133bd?w=600&h=400&fit=crop" },
-                  { name: `${config.teamName} Limited Edition Framed Photo`, price: 450, img: "https://images.unsplash.com/photo-1505367332454-e4c19ea5518b?w=600&h=400&fit=crop" },
+                  { name: `Official ${config.teamName} Game Puck (Signed)`, price: 299, img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&h=400&fit=crop" },
+                  { name: `${config.teamName} Limited Edition Framed Photo`, price: 450, img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=400&fit=crop" },
+                  { name: `${config.teamName} Away Game Jersey`, price: 350, img: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&h=400&fit=crop" },
+                  { name: `Captain's Signed Helmet`, price: 1500, img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&h=400&fit=crop" },
+                  { name: `Game-Worn Goalie Mask`, price: 2200, img: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop" },
+                  { name: `Championship Celebration Canvas`, price: 320, img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=400&fit=crop" },
+                  { name: `Locker Room Nameplate`, price: 180, img: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&h=400&fit=crop" },
+                  { name: `Retro Heritage Jersey`, price: 420, img: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&h=400&fit=crop" },
+                  { name: `Practice Worn Skates`, price: 650, img: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=600&h=400&fit=crop" },
+                  { name: `Signed 8x10 Action Shot`, price: 150, img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=400&fit=crop" },
+                  { name: `Commemorative Pin Set`, price: 85, img: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&h=400&fit=crop" },
+                  { name: `Game-Used Goal Netting`, price: 210, img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&h=400&fit=crop" },
+                  { name: `Official Team Warmup Jacket`, price: 280, img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&h=400&fit=crop" },
+                  { name: `Signed Player Gloves`, price: 700, img: "https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?w=600&h=400&fit=crop" },
+                  { name: `Draft Day Podium Hat`, price: 95, img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=400&fit=crop" },
+                  { name: `Exclusive VIP Lanyard`, price: 45, img: "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&h=400&fit=crop" },
+                  { name: `Team Logo Neon Sign`, price: 399, img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=400&fit=crop" },
+                  { name: `Arena Seat Back (Autographed)`, price: 550, img: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=600&h=400&fit=crop" },
+                  { name: `Commemorative Playoff Ticket`, price: 120, img: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop" },
+                  { name: `Coach's Game Playbook Page`, price: 890, img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&h=400&fit=crop" },
+                  { name: `${config.teamName} Crystal Whiskey Glass`, price: 65, img: "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?w=600&h=400&fit=crop" },
+                  { name: `Signed Bobblehead Series`, price: 180, img: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&h=400&fit=crop" },
+                  { name: `Stanley Cup Replica (Mini)`, price: 400, img: "https://images.unsplash.com/photo-1580748141549-71748dbe0bdc?w=600&h=400&fit=crop" },
                 ].map((item, i) => (
                   <div key={i} className="event-card fade-up group" style={{ animationDelay: `${i * 0.1}s`, background: `linear-gradient(135deg, rgba(var(--oilers-blue-rgb), 0.6), rgba(0,0,0,0.8))` }}>
                     <div className="event-card-img" style={{ backgroundImage: `url('${item.img}')`, filter: "grayscale(30%)", opacity: 0.8 }}>
@@ -1106,11 +1518,37 @@ export default function CityPage({ cityId = "edmonton" }) {
           </div>
         )}
 
+        {/* SAVED EVENTS PAGE */}
+        {activePage === "saved" && (
+          <div id="saved-page" style={{ padding: "80px 24px" }} className="fade-in">
+            <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+              <div className="section-header">
+                <div className="section-bar" style={{ background: "var(--accent)" }}></div>
+                <h2 className="section-title">Saved Events</h2>
+              </div>
+              
+              {savedEventsData.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">💔</div>
+                  <p>You haven't saved any events yet. Bookmark events to track them here!</p>
+                  <button className="btn-primary" style={{ marginTop: "20px" }} onClick={() => setActivePage("events")}>Find Events</button>
+                </div>
+              ) : (
+                <div className="events-grid">
+                  {savedEventsData.map((ev, i) => (
+                    <EventCard key={ev.id} ev={ev} index={i} onToast={addToast} isSaved={savedEventIds.includes(ev.id)} onSave={() => toggleSaveEvent(ev.id)} />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* FOOTER */}
         <footer>
           <div className="footer-inner">
             <div className="footer-logo">
-              <img src="/logo.png" alt="Edmonton Weekend Logo" style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff" }} />
+              <img src="/logo.png" alt={`${config.name} Weekend Logo`} style={{ width: "36px", height: "36px", borderRadius: "10px", objectFit: "cover", background: "#fff" }} />
               <span className="footer-logo-text">
                 {config.name}<span>Weekend</span>
               </span>
@@ -1120,9 +1558,9 @@ export default function CityPage({ cityId = "edmonton" }) {
               to know what&apos;s happening in their city.
             </p>
             <div className="footer-socials">
-              <span className="footer-social">@{config.name.toLowerCase()}weekend</span>
-              <span className="footer-social">@{config.name.toLowerCase()}weekend</span>
-              <span className="footer-social">@{config.name.toLowerCase()}weekend</span>
+              <span className="footer-social" onClick={() => window.open('https://instagram.com/townmedialabs', '_blank')}>Instagram</span>
+              <span className="footer-social" onClick={() => window.open('https://twitter.com/townmedialabs', '_blank')}>X (Twitter)</span>
+              <span className="footer-social" onClick={() => window.open('https://tiktok.com/@townmedialabs', '_blank')}>TikTok</span>
             </div>
             <p className="footer-copy">
               © {new Date().getFullYear()} {config.name} Weekend • {config.name}, {config.provFull} 🇨🇦
@@ -1132,6 +1570,19 @@ export default function CityPage({ cityId = "edmonton" }) {
             </p>
           </div>
         </footer>
+      </div>
+      {showScrollTop && (
+        <button className="scroll-top-btn fade-in" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+        </button>
+      )}
+      <div className="toast-container">
+        {toasts.map((toast) => (
+          <div key={toast.id} className={`toast ${toast.type}`}>
+            {toast.type === "success" ? "✅" : toast.type === "error" ? "❌" : "ℹ️"}
+            {toast.message}
+          </div>
+        ))}
       </div>
     </>
   );

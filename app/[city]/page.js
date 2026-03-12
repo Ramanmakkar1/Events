@@ -8,21 +8,26 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const config = CITIES[params.city] || CITIES["edmonton"];
+  const resolvedParams = await params;
+  const config = CITIES[resolvedParams.city] || CITIES["edmonton"];
   return {
-    title: `${config.name} Weekend — Everything Happening in ${config.name}`,
-    description: `Live concerts, ${config.teamName} games, festivals, comedy nights — your one-stop calendar for ${config.name}. Updated in real time.`,
+    title: `Things to do in ${config.name} This Weekend | Concerts, Sports & Events`,
+    description: `Discover what's happening in ${config.name} this weekend. Live concerts, ${config.teamName} games, festivals, and comedy nights. Your ultimate local event calendar based in ${config.name}.`,
     openGraph: {
-      title: `${config.name} Weekend — Everything Happening in ${config.name}`,
-      description: `Live concerts, ${config.teamName} games, festivals, comedy nights — your one-stop calendar for ${config.name}.`,
+      title: `Things to do in ${config.name} This Weekend`,
+      description: `Discover what's happening in ${config.name} this weekend. Live concerts, ${config.teamName} games, festivals, and comedy nights.`,
       type: "website",
+    },
+    alternates: {
+      canonical: `/${resolvedParams.city}`,
     },
   };
 }
 
-export default function CityDynamicPage({ params }) {
-  if (!CITIES[params.city]) {
+export default async function CityDynamicPage({ params }) {
+  const resolvedParams = await params;
+  if (!CITIES[resolvedParams.city]) {
     return <CityPage cityId="edmonton" />;
   }
-  return <CityPage cityId={params.city} />;
+  return <CityPage cityId={resolvedParams.city} />;
 }
