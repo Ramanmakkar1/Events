@@ -506,7 +506,6 @@ export default function CityPage({ cityId = "edmonton" }) {
     }
     
     setLoading(true);
-    setIsDemo(false);
     try {
       const start = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
       const end = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0, 23, 59, 59);
@@ -526,12 +525,15 @@ export default function CityPage({ cityId = "edmonton" }) {
         return unique;
       });
       fetchedMonthsRef.current.add(monthKey);
+      setIsDemo(false);
     } catch (err) {
       console.error("API unreachable, using demo data:", err);
       if (!isDemo) {
         setAllEvents(generateDemoEvents(config));
         setIsDemo(true);
       }
+      // CRITICAL: Cache the failed month lookup so we don't loop endlessly retrying it
+      fetchedMonthsRef.current.add(monthKey);
     }
     setLoading(false);
   }, [config, isDemo]);
